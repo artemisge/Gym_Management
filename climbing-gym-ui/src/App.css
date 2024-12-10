@@ -1,0 +1,27 @@
+/* App.css */
+.app-container {
+  display: flex;
+  height: 100vh;
+  background-color: #121212; /* Dark mode background */
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px 40px; /* Add padding for main content */
+  color: #ffffff;
+  background-color: #1b1b1b;
+  overflow-y: auto;
+}
+
+/* Adjust the main content padding for responsiveness */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 20px 30px; /* Reduce padding for medium screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 20px 20px; /* Further reduce padding for small screens */
+  }
+}

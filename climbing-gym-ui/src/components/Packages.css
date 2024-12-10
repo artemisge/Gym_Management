@@ -1,0 +1,31 @@
+/* Packages.css */
+.packages {
+    margin-left: 250px; /* Space for the sidebar */
+    padding: 20px;
+  }
+  
+  .packages h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  .packages form {
+    margin-bottom: 30px;
+  }
+  
+  .packages input {
+    margin-right: 10px;
+  }
+  
+  .packages ul {
+    padding-left: 20px;
+  }
+  
+  .packages li {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    margin-left: 10px;
+  }
+  
