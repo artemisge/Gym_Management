@@ -21,7 +21,7 @@ public class User {
         // empty constructor for hibernate
     }
 
-    public User(String name, String email, String phone, LocalDate membershipExpirationDate){
+    public User(String name, String email, String phone){
         this.name = name;
         this.email = email;
         this.phone = phone;
