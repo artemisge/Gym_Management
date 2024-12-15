@@ -1,25 +1,30 @@
 package com.climbinggym.entity;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 
+
 @Entity
+@Table(name = "PACKAGES")
 public class Package {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String name;  // e.g., "1 Month", "3 Months", "Yearly"
-    private Double price; // Price of the package
-    private Integer duration;  // Duration in days (or months)
+    private BigDecimal price; // Price of the package
+    @Column(name = "duration_in_days")
+    private Integer durationInDays;  // Duration in days (or months)
     private Boolean available; // Indicates if the package is available for purchase
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -31,20 +36,20 @@ public class Package {
         this.name = name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
     public Integer getDuration() {
-        return duration;
+        return durationInDays;
     }
 
-    public void setDuration(Integer duration) {
-        this.duration = duration;
+    public void setDuration(Integer durationInDays) {
+        this.durationInDays = durationInDays;
     }
 
     public Boolean getAvailable() {

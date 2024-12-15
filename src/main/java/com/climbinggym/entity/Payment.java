@@ -1,38 +1,41 @@
 package com.climbinggym.entity;
-
+import java.time.LocalDate;
 import jakarta.persistence.*;
-import java.util.Date;
+
 
 @Entity
+@Table(name = "PAYMENTS")
 public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Date paymentDate;
-
+    private Integer id;
+    
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user; // Payment made by a specific user
-
+    
     @ManyToOne
-    @JoinColumn(name = "package_id")
+    @JoinColumn(name = "package_id", nullable = false)
     private Package packageType; // Payment associated with a specific package
 
+    @Column(name = "payment_date") 
+    private LocalDate paymentDate;
+
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Date getPaymentDate() {
+    public LocalDate getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(Date paymentDate) {
+    public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
 

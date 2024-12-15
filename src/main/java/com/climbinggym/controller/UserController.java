@@ -1,6 +1,6 @@
 package com.climbinggym.controller;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/membership")
-    public ResponseEntity<Void> updateMembership(@PathVariable Long id, @RequestParam Date expirationDate) {
+    public ResponseEntity<Void> updateMembership(@PathVariable Long id, @RequestParam LocalDate expirationDate) {
         userService.updateMembership(id, expirationDate);
         return ResponseEntity.noContent().build();
     }

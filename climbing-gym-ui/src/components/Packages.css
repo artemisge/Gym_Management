@@ -1,5 +1,11 @@
-/* Packages.css */
-.packages {
+/* General Styles */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .packages {
     margin-left: 250px; /* Space for the sidebar */
     padding: 20px;
   }
@@ -7,25 +13,137 @@
   .packages h2 {
     font-size: 28px;
     margin-bottom: 20px;
+    color: #ffffff;
   }
   
-  .packages form {
-    margin-bottom: 30px;
+  /* Filter Buttons */
+  .filter-buttons {
+    margin-bottom: 20px;
   }
   
-  .packages input {
+  .filter-buttons button {
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+    border: none;
+    padding: 10px 20px;
     margin-right: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
   }
   
-  .packages ul {
-    padding-left: 20px;
+  .filter-buttons button.active,
+  .filter-buttons button:hover {
+    background-color: #6200ee;
+    color: white;
   }
   
-  .packages li {
-    margin-bottom: 10px;
+  /* Package List */
+  .package-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
   
-  button {
+  .package-item {
+    background-color: #1e1e1e;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .package-item strong {
+    color: #ffffff;
+  }
+  
+  .status-active {
+    color: #28a745;
+  }
+  
+  .status-inactive {
+    color: #dc3545;
+  }
+  
+  .package-item button {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
     margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .package-item button:hover {
+    background-color: #6200ee;
+    color: white;
+  }
+  
+  /* Add New Package Button */
+  .add-package-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background-color: #6200ee;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-package-button:hover {
+    background-color: #3700b3;
+  }
+  
+  /* Add Package Form */
+  .add-package-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+    display: none; /* Hidden by default */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  .add-package-form h3 {
+    margin-bottom: 15px;
+  }
+  
+  .add-package-form input {
+    width: calc(100% - 20px);
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #3a3a3a;
+    border-radius: 5px;
+    background-color: #2b2b2b;
+    color: #e0e0e0;
+  }
+  
+  .add-package-form input:focus {
+    border-color: #6200ee;
+  }
+  
+  .add-package-form button {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-package-form button:hover {
+    background-color: #6200ee;
   }
   

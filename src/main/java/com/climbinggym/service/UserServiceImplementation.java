@@ -1,6 +1,6 @@
 package com.climbinggym.service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void updateMembership(Long id, Date expirationDate) {
+    public void updateMembership(Long id, LocalDate expirationDate) {
         User user = getUser(id); // Ensures user exists
         user.setExpirationDate(expirationDate);
         userRepository.save(user);

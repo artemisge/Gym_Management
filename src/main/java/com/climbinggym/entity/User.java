@@ -1,32 +1,43 @@
 package com.climbinggym.entity;
-
-import java.util.Date;
-
+import java.time.LocalDate;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "USERS")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String email;
+    private Integer id;
     private String name;
+    @Column(unique = true)
+    private String email;
+    @Column(unique = true)
     private String phone;
-    private Date expirationDate;
+    @Column(name = "membership_expiration") 
+    private LocalDate membershipExpirationDate;
 
+    public User(){
+        // empty constructor for hibernate
+    }
+
+    public User(String name, String email, String phone, LocalDate membershipExpirationDate){
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.membershipExpirationDate = null; //user has no membership when generated
+    }
     // Utility method to check membership status
     public boolean isMembershipActive() {
-        return expirationDate != null && expirationDate.after(new Date());
+        return membershipExpirationDate != null && membershipExpirationDate.isAfter(LocalDate.now());
     }
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -54,11 +65,11 @@ public class User {
         this.phone = phone;
     }
 
-    public Date getExpirationDate() {
-        return expirationDate;
+    public LocalDate getExpirationDate() {
+        return membershipExpirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
+    public void setExpirationDate(LocalDate membershipExpirationDate) {
+        this.membershipExpirationDate = membershipExpirationDate;
     }
 }
