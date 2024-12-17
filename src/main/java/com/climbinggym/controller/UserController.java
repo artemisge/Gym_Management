@@ -10,6 +10,7 @@ import com.climbinggym.entity.User;
 import com.climbinggym.service.UserService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/users")
 public class UserController {
 

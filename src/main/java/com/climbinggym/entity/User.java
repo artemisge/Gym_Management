@@ -9,11 +9,16 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(nullable = false)
     private String name;
-    @Column(unique = true)
+
+    @Column(nullable = false, unique = true)
     private String email;
-    @Column(unique = true)
+
+    @Column(nullable = false, unique = true)
     private String phone;
+
     @Column(name = "membership_expiration") 
     private LocalDate membershipExpirationDate;
 

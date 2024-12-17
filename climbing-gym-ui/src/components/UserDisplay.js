@@ -51,10 +51,10 @@ const UserDisplay = ({ user, onClose }) => {
               {isEditable ? (
                 <input
                   type="text"
-                  defaultValue={user.activeMembershipExpiration || 'Inactive'}
+                  defaultValue={user.membershipExpirationDate || 'Inactive'}
                 />
               ) : (
-                <span>{user.activeMembershipExpiration || 'Inactive'}</span>
+                <span>{user.membershipExpirationDate || 'Inactive'}</span>
               )}
             </div>
           </div>
@@ -63,7 +63,7 @@ const UserDisplay = ({ user, onClose }) => {
           <div className="user-payments">
             <h4>Payment History</h4>
             <ul className="payment-list">
-              {user.payments.length > 0 ? (
+              {user.payments && user.payments.length > 0 ? (
                 user.payments.map((payment, index) => (
                   <li key={index}>
                     {payment.date} - ${payment.amount} ({payment.package})

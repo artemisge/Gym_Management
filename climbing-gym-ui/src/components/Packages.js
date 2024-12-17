@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Packages.css';
+import axios from 'axios';
 
 const Packages = () => {
   const [packages, setPackages] = useState([]);
@@ -7,12 +8,12 @@ const Packages = () => {
   const [filter, setFilter] = useState('active'); // 'active' or 'all'
 
   useEffect(() => {
-    // Fetch packages from the backend (placeholder data for now)
-    setPackages([
-      { id: 1, name: 'Day Pass', price: 7, duration: 1, available: true },
-      { id: 2, name: '1 Month Pass', price: 50, duration: 30, available: true },
-      { id: 3, name: '3 Month Pass', price: 130, duration: 90, available: false },
-    ]);
+    // Fetch packages from the backend
+    axios.get('http://localhost:8080/packages')
+      .then(response => {
+        setPackages(response.data);  // Set the fetched packages data
+      })
+      .catch(error => console.error('Error fetching packages:', error));
   }, []);
 
   const handleSubmit = (e) => {
@@ -22,17 +23,35 @@ const Packages = () => {
       alert('Price and duration must be positive values.');
       return;
     }
-    setPackages([...packages, { ...newPackage, id: packages.length + 1 }]);
-    setNewPackage({ name: '', price: '', duration: '', available: true });
-    document.getElementById('add-package-form').style.display = 'none';
+
+    // Send the new package to the backend
+    axios.post('http://localhost:8080/packages', newPackage)
+      .then(response => {
+        // Add the new package to the state after successfully creating it
+        setPackages([...packages, response.data]);
+        setNewPackage({ name: '', price: '', duration: '', available: true });
+        document.getElementById('add-package-form').style.display = 'none';
+      })
+      .catch(error => {
+        console.error('Error adding new package:', error);
+      });
   };
 
   const handleToggleAvailability = (id) => {
     setPackages(packages.map(pkg => pkg.id === id ? { ...pkg, available: !pkg.available } : pkg));
+    
+    // Update the availability in the backend
+    const packageToUpdate = packages.find(pkg => pkg.id === id);
+    axios.put(`http://localhost:8080/packages/${id}`, { ...packageToUpdate, available: !packageToUpdate.available })
+      .catch(error => console.error('Error updating package availability:', error));
   };
 
   const handleDeletePackage = (id) => {
     setPackages(packages.filter(pkg => pkg.id !== id));
+    
+    // Send delete request to backend
+    axios.delete(`http://localhost:8080/packages/${id}`)
+      .catch(error => console.error('Error deleting package:', error));
   };
 
   const filteredPackages = packages.filter(pkg => filter === 'all' || pkg.available);

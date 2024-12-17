@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Users.css';
 import AddUser from './AddUser'; // Import AddUser modal
 import UserDisplay from './UserDisplay'; // Import UserDisplay modal
+import axios from 'axios';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -12,30 +13,12 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
-    // Fetch users from the backend (this is just a placeholder)
-    const fetchedUsers = [
-      {
-        id: 1,
-        name: 'John Doe',
-        email: 'john@example.com',
-        phone: '123-456-7890',
-        payments: [
-          { date: '2024/12/09', amount: 20, package: 'Monthly Package' },
-          { date: '2024/08/23', amount: 8, package: 'Daypass' }
-        ],
-        activeMembershipExpiration: '2025/12/09',
-      },
-      {
-        id: 2,
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        phone: '987-654-3210',
-        payments: [],
-        activeMembershipExpiration: 'Inactive',
-      },
-    ];
-    setUsers(fetchedUsers);
-    setFilteredUsers(fetchedUsers); // Initialize filtered users
+      axios.get('http://localhost:8080/users')
+        .then(response => {
+          setUsers(response.data);
+          setFilteredUsers(response.data);
+        })
+        .catch(error => console.error('Error fetching users:', error));
   }, []);
 
   // Search Functionality

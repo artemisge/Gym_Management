@@ -19,6 +19,18 @@ public class Package {
     private Integer durationInDays;  // Duration in days (or months)
     private Boolean available; // Indicates if the package is available for purchase
 
+    public Package() {
+        // empty for hibernate
+    }
+
+    // Constructor to initialize a Package with all fields
+    public Package(String name, BigDecimal price, Integer durationInDays, Boolean available) {
+        this.name = name;
+        this.price = price;
+        this.durationInDays = durationInDays;
+        this.available = available;
+    }
+
     // Getters and Setters
     public Integer getId() {
         return id;

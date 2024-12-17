@@ -3,6 +3,7 @@ package com.climbinggym.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.climbinggym.entity.User;
@@ -19,7 +20,14 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public User addUser(User user) {
-        return userRepository.save(user);
+        try {
+            userRepository.save(user);
+            System.out.println("User saved successfully: " + user);
+            return user;
+        } catch (DataIntegrityViolationException e) {
+            System.err.println("Error: Duplicate email or phone detected!");
+            return null;
+        }
     }
 
     @Override
