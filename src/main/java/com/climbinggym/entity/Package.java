@@ -2,6 +2,8 @@ package com.climbinggym.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 
 
@@ -15,8 +17,11 @@ public class Package {
 
     private String name;  // e.g., "1 Month", "3 Months", "Yearly"
     private BigDecimal price; // Price of the package
+
+    @JsonProperty("durationInDays")
     @Column(name = "duration_in_days")
     private Integer durationInDays;  // Duration in days (or months)
+
     private Boolean available; // Indicates if the package is available for purchase
 
     public Package() {
@@ -56,11 +61,11 @@ public class Package {
         this.price = price;
     }
 
-    public Integer getDuration() {
+    public Integer getDurationInDays() {
         return durationInDays;
     }
 
-    public void setDuration(Integer durationInDays) {
+    public void setDurationInDays(Integer durationInDays) {
         this.durationInDays = durationInDays;
     }
 

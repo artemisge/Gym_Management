@@ -1,6 +1,7 @@
 package com.climbinggym;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.repository.CrudRepository;
 
 import com.climbinggym.entity.Payment;
 import com.climbinggym.entity.User;
@@ -16,6 +18,7 @@ import com.climbinggym.entity.Package;
 
 import com.climbinggym.repository.UserRepository;
 import com.climbinggym.service.PackageService;
+import com.climbinggym.service.PaymentService;
 import com.climbinggym.service.UserService;
 
 import jakarta.annotation.PostConstruct;
@@ -26,14 +29,16 @@ import com.github.javafaker.Faker;
 @EntityScan(basePackages = "com.climbinggym.entity") // Replace with your entity package path
 public class ClimbingGymSystemApplication {
 
-    @Autowired
+	@Autowired
 	private UserService userService;
 	@Autowired
 	private PackageService packageService;
+	@Autowired
+	private PaymentService paymentService;
 
 	public void createFakeData() {
 		Faker faker = new Faker();
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 5; i++) {
 			// Using the parameterized constructor to ensure non-nullable fields are set
 			User user = new User(faker.name().fullName(), faker.internet().emailAddress(), faker.phoneNumber().phoneNumber());
 			
@@ -61,6 +66,30 @@ public class ClimbingGymSystemApplication {
 		packageService.addPackage(monthlyPackage);
 		packageService.addPackage(yearlyPackage);
 		packageService.addPackage(holidayPackage);
+
+		// Add sample payments to User 1
+		// Retrieve user with ID 1
+		User user = userService.getUser(1L);
+
+		// Retrieve package with ID 2
+		Package packageType = packageService.getPackageById(2L);
+
+		// Create payment 1
+		Payment payment1 = new Payment();
+		payment1.setUser(user);
+		payment1.setPackageType(packageType);
+		payment1.setPaymentDate(LocalDate.now());
+
+		// Create payment 2
+		Payment payment2 = new Payment();
+		payment2.setUser(user);
+		payment2.setPackageType(packageType);
+		payment2.setPaymentDate(LocalDate.now().minusMonths(1));
+
+		// Save payments
+		paymentService.makePayment(payment1);
+        paymentService.makePayment(payment2);
+		
 	}
 	
 

@@ -11,21 +11,52 @@ const Users = () => {
   const [sortOption, setSortOption] = useState('id');
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [showActiveUsers, setShowActiveUsers] = useState(false);
 
   useEffect(() => {
-      axios.get('http://localhost:8080/users')
-        .then(response => {
-          setUsers(response.data);
-          setFilteredUsers(response.data);
-        })
-        .catch(error => console.error('Error fetching users:', error));
+    axios.get('http://localhost:8080/users')
+      .then(response => {
+        const usersWithStatus = response.data.map(user => ({
+          ...user,
+          isMembershipActive: false, // Initialize membership status
+        }));
+        setUsers(usersWithStatus);
+        setFilteredUsers(usersWithStatus);
+        fetchMembershipStatuses(usersWithStatus); // Fetch membership status for each user
+      })
+      .catch(error => console.error('Error fetching users:', error));
   }, []);
+
+  // Fetch membership status for each user
+  const fetchMembershipStatuses = (users) => {
+    users.forEach(user => {
+      axios.get(`http://localhost:8080/users/${user.id}/membership-status`)
+        .then(response => {
+          const updatedUsers = [...users];
+          const userIndex = updatedUsers.findIndex(u => u.id === user.id);
+          if (userIndex !== -1) {
+            updatedUsers[userIndex].isMembershipActive = response.data;
+          }
+          setUsers(updatedUsers); // Update the users with the membership status
+          setFilteredUsers(updatedUsers); // Update filtered users as well
+        })
+        .catch(error => console.error('Error fetching membership status:', error));
+    });
+  };
+
+  // Filter users based on active status
+  const filterUsers = () => {
+    if (showActiveUsers) {
+      return users.filter(user => user.isMembershipActive);
+    }
+    return users;
+  };
 
   // Search Functionality
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const results = users.filter((user) =>
+    const results = filterUsers().filter((user) =>
       user.name.toLowerCase().includes(term) ||
       user.email.toLowerCase().includes(term) ||
       user.phone.toLowerCase().includes(term)
@@ -50,8 +81,22 @@ const Users = () => {
   // Modal Handlers
   const handleAddUser = () => setShowAddUserModal(true);
   const handleCloseAddUserModal = () => setShowAddUserModal(false);
-  const handleUserDisplay = (user) => setSelectedUser(user);
-  const handleCloseUserDisplay = () => setSelectedUser(null);
+  const handleUserDisplay = (user) => {
+    window.history.pushState({}, '', `/users/${user.id}`); // Update URL
+    setSelectedUser(user);
+  };
+  const handleCloseUserDisplay = () => {
+    setSelectedUser(null); // Close the modal
+    window.history.pushState({}, '', '/users'); // Reset the URL to /users
+  };
+
+  // Toggle Active/All Users
+  const handleToggleActiveUsers = () => {
+    setShowActiveUsers(!showActiveUsers);
+    setFilteredUsers(filterUsers());
+  };
+
+  const activeUserCount = users.filter(user => user.isMembershipActive).length;
 
   return (
     <div className="users">
@@ -72,11 +117,31 @@ const Users = () => {
         </select>
       </div>
 
+      {/* Toggle Button for Active/All Users */}
+      <div className="user-filter">
+        <button
+          className={`filter-btn ${showActiveUsers ? 'active' : ''}`}
+          onClick={handleToggleActiveUsers}
+        >
+          {showActiveUsers ? 'Show All Users' : 'Show Active Users'}
+        </button>
+        <span className="user-count">
+          {showActiveUsers ? `${activeUserCount} Active` : `${users.length} Total`}
+        </span>
+      </div>
+
       {/* User List */}
       <ul className="user-list">
         {filteredUsers.map((user) => (
-          <li key={user.id} className="user-item">
-            <span onClick={() => handleUserDisplay(user)}>{user.name}</span>
+          <li
+            key={user.id}
+            className="user-item"
+            onClick={() => handleUserDisplay(user)} // Make the whole row clickable
+          >
+            <div className="user-name">{user.name}</div>
+            <div className={`membership-status ${user.isMembershipActive ? 'active' : 'inactive'}`}>
+              {user.isMembershipActive ? 'Active' : 'Inactive'}
+            </div>
           </li>
         ))}
       </ul>
@@ -90,7 +155,7 @@ const Users = () => {
       {/* Show User Display Modal */}
       {selectedUser && (
         <UserDisplay
-          user={selectedUser}
+          userId={selectedUser.id} // Pass only the userId
           onClose={handleCloseUserDisplay}
         />
       )}

@@ -9,6 +9,6 @@ public interface PackageService {
     Package addPackage(Package pkg); // Add a new package
     List<Package> getAllPackages(); // Get all packages (including unavailable ones)
     List<Package> getAllActivePackages(); // Get only available packages
-    Optional<Package> getPackageById(Long id); // Get a package by ID
+    Package getPackageById(Long id); // Get a package by ID
     void deletePackage(Long id); // Delete a package
 }

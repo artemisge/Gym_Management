@@ -1,96 +1,144 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UserDisplay.css';
 
-const UserDisplay = ({ user, onClose }) => {
+const UserDisplay = ({ userId, onClose }) => {
+  const [user, setUser] = useState(null);
+  const [payments, setPayments] = useState([]);
   const [isEditable, setIsEditable] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const toggleEdit = () => {
-    setIsEditable(!isEditable);
+  // Fetch user details on component mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:8080/users/${userId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        const data = await response.json();
+        setUser(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchUserPayments = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/payments/user/${userId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user payments');
+        }
+        const data = await response.json();
+        setPayments(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchUser();
+    fetchUserPayments();
+  }, [userId]);
+
+  const toggleEdit = () => setIsEditable((prev) => !prev);
+
+  const handleSave = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to save user data');
+      }
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+      setIsEditable(false);
+    } catch (err) {
+      setError(err.message);
+    }
   };
+
+  const handleCancel = () => setIsEditable(false);
+
+  if (loading) return <div className="modal-overlay">Loading...</div>;
+
+  if (error) {
+    return (
+      <div className="modal-overlay">
+        <div className="user-display-modal">
+          <button className="close-btn" onClick={onClose}>×</button>
+          <h2>Error</h2>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="modal-overlay">
       <div className="user-display-modal">
-        {/* Close Button */}
-        <button className="close-btn" onClick={onClose}>
-          ×
-        </button>
-
-        {/* Title */}
+        <button className="close-btn" onClick={onClose}>×</button>
         <h2 className="modal-title">User Profile</h2>
-
         <div className="modal-content">
-          {/* Left Side: User Info */}
           <div className="user-info">
-            <div className="form-group">
-              <label>Name:</label>
-              {isEditable ? (
-                <input type="text" defaultValue={user.name} />
-              ) : (
-                <span>{user.name}</span>
-              )}
-            </div>
-            <div className="form-group">
-              <label>Email:</label>
-              {isEditable ? (
-                <input type="email" defaultValue={user.email} />
-              ) : (
-                <span>{user.email}</span>
-              )}
-            </div>
-            <div className="form-group">
-              <label>Phone:</label>
-              {isEditable ? (
-                <input type="text" defaultValue={user.phone} />
-              ) : (
-                <span>{user.phone}</span>
-              )}
-            </div>
+            {['name', 'email', 'phone'].map((field) => (
+              <div className="form-group" key={field}>
+                <label>{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
+                {isEditable ? (
+                  <input
+                    type="text"
+                    value={user[field]}
+                    onChange={(e) => setUser({ ...user, [field]: e.target.value })}
+                  />
+                ) : (
+                  <span>{user[field]}</span>
+                )}
+              </div>
+            ))}
             <div className="form-group">
               <label>Membership Expiration:</label>
               {isEditable ? (
                 <input
-                  type="text"
-                  defaultValue={user.membershipExpirationDate || 'Inactive'}
+                  type="date"
+                  value={user.expirationDate || ''}
+                  onChange={(e) =>
+                    setUser({ ...user, expirationDate: e.target.value })
+                  }
                 />
               ) : (
-                <span>{user.membershipExpirationDate || 'Inactive'}</span>
+                <span>
+                  {user.expirationDate 
+                    ? new Date(user.expirationDate).toLocaleDateString('en-US') 
+                    : 'Inactive'}
+                </span>
               )}
             </div>
           </div>
-
-          {/* Right Side: Payment History */}
           <div className="user-payments">
             <h4>Payment History</h4>
             <ul className="payment-list">
-              {user.payments && user.payments.length > 0 ? (
-                user.payments.map((payment, index) => (
-                  <li key={index}>
-                    {payment.date} - ${payment.amount} ({payment.package})
-                  </li>
-                ))
-              ) : (
-                <li>No payments available</li>
-              )}
+              {payments.length > 0
+                ? payments.map((payment) => (
+                    <li key={payment.id}>
+                      {payment.paymentDate} - ${payment.amount} ({payment.packageType?.name || 'Unknown'})
+                    </li>
+                  ))
+                : <li>No payments available</li>}
             </ul>
           </div>
         </div>
-
-        {/* Bottom Buttons */}
         <div className="modal-footer">
-          {!isEditable && (
-            <button className="edit-btn" onClick={toggleEdit}>
-              Edit
-            </button>
-          )}
-          {isEditable && (
+          {!isEditable ? (
+            <button className="edit-btn" onClick={toggleEdit}>Edit</button>
+          ) : (
             <>
-              <button className="save-btn" onClick={toggleEdit}>
-                Save
-              </button>
-              <button className="cancel-btn" onClick={toggleEdit}>
-                Cancel
-              </button>
+              <button className="save-btn" onClick={handleSave}>Save</button>
+              <button className="cancel-btn" onClick={handleCancel}>Cancel</button>
             </>
           )}
         </div>

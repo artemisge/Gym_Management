@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.climbinggym.entity.User;
+import com.climbinggym.entity.Package;
+
 import com.climbinggym.service.UserService;
 
 @RestController
@@ -32,6 +34,12 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        User user = userService.updateUser(id, updatedUser);
+        return ResponseEntity.ok(user);
+    }
+    
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -39,10 +47,15 @@ public class UserController {
     }
 
     @PutMapping("/{id}/membership")
-    public ResponseEntity<Void> updateMembership(@PathVariable Long id, @RequestParam LocalDate expirationDate) {
-        userService.updateMembership(id, expirationDate);
+    public ResponseEntity<Void> updateMembership(@PathVariable Long id, @RequestBody Package purchasedPackage) {
+        System.out.println("User ID: " + id);
+        System.out.println("Purchased Package: " + purchasedPackage.getName());
+        System.out.println("Duration in Days: " + purchasedPackage.getDurationInDays());
+
+        userService.updateMembership(id, purchasedPackage);
         return ResponseEntity.noContent().build();
     }
+
 
     @GetMapping("/{id}/membership-status")
     public ResponseEntity<Boolean> isMembershipActive(@PathVariable Long id) {

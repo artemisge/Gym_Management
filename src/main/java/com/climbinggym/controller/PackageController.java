@@ -7,7 +7,6 @@ import com.climbinggym.entity.Package;
 import com.climbinggym.service.PackageService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -25,7 +24,7 @@ public class PackageController {
     public Package createPackage(@RequestBody Package pkg) {
         // Ensure the package availability is set (if not provided, default to true)
         if (pkg.getAvailable() == null) {
-            pkg.setAvailable(true); // default to true if not provided
+            pkg.setAvailable(true); // Default to true if not provided
         }
         return packageService.addPackage(pkg);
     }
@@ -39,10 +38,11 @@ public class PackageController {
     public List<Package> getAllActivePackages() {
         return packageService.getAllActivePackages();
     }
-    
+
     @GetMapping("/{id}")
     public Package getPackageById(@PathVariable Long id) {
-        return packageService.getPackageById(id).orElseThrow(() -> new RuntimeException("Package not found"));
+        // Now directly fetch the package or throw an exception from the service
+        return packageService.getPackageById(id);
     }
 
     @DeleteMapping("/{id}")
@@ -50,19 +50,18 @@ public class PackageController {
         packageService.deletePackage(id);
     }
 
-    // Optional: Update package (for example, to toggle availability)
     @PutMapping("/{id}")
     public Package updatePackage(@PathVariable Long id, @RequestBody Package updatedPackage) {
-        Optional<Package> existingPackage = packageService.getPackageById(id);
-        if (existingPackage.isPresent()) {
-            Package pkg = existingPackage.get();
-            pkg.setName(updatedPackage.getName());
-            pkg.setPrice(updatedPackage.getPrice());
-            pkg.setDuration(updatedPackage.getDuration());
-            pkg.setAvailable(updatedPackage.getAvailable()); // Update availability
-            return packageService.addPackage(pkg); // save the updated package
-        } else {
-            throw new RuntimeException("Package not found");
-        }
+        // Fetch the existing package or throw an exception from the service
+        Package existingPackage = packageService.getPackageById(id);
+
+        // Update the fields of the existing package
+        existingPackage.setName(updatedPackage.getName());
+        existingPackage.setPrice(updatedPackage.getPrice());
+        existingPackage.setDurationInDays(updatedPackage.getDurationInDays());
+        existingPackage.setAvailable(updatedPackage.getAvailable());
+
+        // Save the updated package
+        return packageService.addPackage(existingPackage);
     }
 }

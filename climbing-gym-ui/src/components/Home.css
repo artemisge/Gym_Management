@@ -1,97 +1,154 @@
 .home {
-    margin-left: 250px; /* Space for the sidebar */
-    padding: 20px;
-    color: #fff;
+  margin-left: 250px; /* Space for the sidebar */
+  padding: 20px;
+  color: #fff;
+}
+
+.home h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #4caf50; /* Green for header */
+}
+
+.content-container {
+  display: flex;
+  flex-wrap: wrap; /* This will ensure stacking when the screen is small */
+  gap: 20px; /* Adjusts the space between the sections */
+  justify-content: center; /* Centers the sections within the container */
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between; /* Aligns the statistics side by side */
+  width: 100%;
+  max-width: 1000px; /* Adjusts width of the stats container */
+  gap: 20px; /* Space between the two statistics cards */
+}
+
+.stat-card {
+  background-color: #333;
+  border-radius: 8px;
+  padding: 20px;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  border: 1px solid #444; /* Border added for consistency */
+  flex: 1; /* Ensures the cards are evenly spaced */
+  min-width: 200px; /* Makes sure the cards do not shrink too small */
+}
+
+.stat-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #4caf50;
+}
+
+.stat-card p {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.buy-package-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+  background-color: #333;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #444; /* Lighter gray border */
+  margin-top: 20px; /* Space between stats and buy package section */
+}
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.dropdown {
+  position: relative;
+  width: 100%;
+  background-color: #444;
+  border: 1px solid #666;
+  border-radius: 5px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.dropdown-search {
+  width: 100%;
+  padding: 10px;
+  background-color: #444;
+  border: 1px solid #666;
+  color: #fff;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.dropdown-select {
+  width: 100%;
+  padding: 10px;
+  background-color: #444;
+  border: 1px solid #666;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.submit-btn {
+  background-color: #4caf50;
+  border: none;
+  padding: 12px 25px;
+  color: white;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 200px; /* Keeps the button from stretching too much */
+  align-self: center; /* Centers the button */
+  margin-top: 20px;
+}
+
+.submit-btn:hover {
+  background-color: #45a049;
+}
+
+.submit-btn:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content-container {
+    flex-direction: column; /* Stacks sections vertically on smaller screens */
+    align-items: center; /* Centers the content */
   }
-  
-  .home h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #4caf50; /* Highlighted heading */
-  }
-  
+
   .stats {
-    display: flex;
-    flex-wrap: wrap;
+    flex-direction: column; /* Stack the statistics vertically on smaller screens */
     gap: 20px;
   }
-  
-  /* Stat Card */
-  .stat-card {
-    background-color: #333;
-    border-radius: 8px;
-    padding: 20px;
-    flex: 1 1 calc(33% - 20px); /* Responsive: three cards per row */
-    min-width: 250px;
-    color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    transition: transform 0.3s ease;
+
+  .buy-package-container {
+    max-width: 100%;
+    margin: 0 20px;
   }
-  
-  .stat-card:hover {
-    transform: translateY(-5px);
+
+  .dropdown-container {
+    gap: 15px;
   }
-  
-  .stat-card h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: #4caf50;
-  }
-  
-  .stat-card p {
+
+  .home h2 {
     font-size: 24px;
-    font-weight: bold;
-    margin: 0;
   }
-  
-  /* Revenue Section */
-  .stat-card.revenue {
-    flex: 1 1 100%; /* Full-width card for revenue stats */
-  }
-  
-  .toggle-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .toggle-buttons button {
-    background-color: #444;
-    border: 1px solid #666;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .toggle-buttons button.active {
-    background-color: #4caf50;
-    border-color: #4caf50;
-  }
-  
-  .toggle-buttons button:hover {
-    background-color: #45a049;
-  }
-  
-  .stat-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    text-align: left;
-  }
-  
-  .stat-card ul li {
-    margin-bottom: 8px;
-    font-size: 16px;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .stat-card {
-      flex: 1 1 100%;
-    }
-  }
-  
+}
+

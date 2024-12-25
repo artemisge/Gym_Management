@@ -35,8 +35,8 @@ public class PackageServiceImplementation implements PackageService {
     }
 
     @Override
-    public Optional<Package> getPackageById(Long id) {
-        return packageRepository.findById(id);
+    public Package getPackageById(Long id) {
+        return packageRepository.findById(id).orElseThrow(() -> new RuntimeException("Package not found with ID: " + id));
     }
 
     @Override

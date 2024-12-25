@@ -1,5 +1,6 @@
 package com.climbinggym.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -29,5 +30,19 @@ public class PaymentServiceImplementation implements PaymentService {
     @Override
     public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
+    }
+
+    @Override
+    public BigDecimal calculateTotalRevenue() {
+        List<Payment> payments = paymentRepository.findAll();
+        BigDecimal totalRevenue = BigDecimal.ZERO;  // Start with 0
+
+        for (Payment payment : payments) {
+            if (payment.getPackageType() != null && payment.getPackageType().getPrice() != null) {
+                totalRevenue = totalRevenue.add(payment.getPackageType().getPrice());  // Use BigDecimal's add method
+            }
+        }
+
+        return totalRevenue;
     }
 }

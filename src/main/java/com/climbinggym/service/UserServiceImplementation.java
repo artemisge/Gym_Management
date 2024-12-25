@@ -2,6 +2,7 @@ package com.climbinggym.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import com.climbinggym.entity.Package;  // Ensure this import is present
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -36,15 +37,41 @@ public class UserServiceImplementation implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
     }
 
+    public User updateUser(Long id, User updatedUser) {
+        User existingUser = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    
+        existingUser.setName(updatedUser.getName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPhone(updatedUser.getPhone());
+        existingUser.setExpirationDate(updatedUser.getExpirationDate());
+        
+        return userRepository.save(existingUser);
+    }
+    
+
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public void updateMembership(Long id, LocalDate expirationDate) {
-        User user = getUser(id); // Ensures user exists
-        user.setExpirationDate(expirationDate);
+    public void updateMembership(Long userId, Package purchasedPackage) {
+        // Fetch the user by ID
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Get the current membership expiration date (if any)
+        LocalDate currentExpirationDate = user.getExpirationDate();
+
+        // If the user doesn't have an active membership, set the expiration to the current date plus package duration
+        if (currentExpirationDate == null || currentExpirationDate.isBefore(LocalDate.now())) {
+            user.setExpirationDate(LocalDate.now().plusDays(purchasedPackage.getDurationInDays()));
+        } else {
+            // If the user already has an active membership, extend the expiration date by the package's duration
+            user.setExpirationDate(currentExpirationDate.plusDays(purchasedPackage.getDurationInDays()));
+        }
+
+        // Save the user with the updated membership expiration date
         userRepository.save(user);
     }
 
