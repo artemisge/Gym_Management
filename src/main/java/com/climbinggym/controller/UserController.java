@@ -3,6 +3,7 @@ package com.climbinggym.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,4 +69,31 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Endpoint to check if email is already in use
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> isEmailUnique(@PathVariable String email) {
+        boolean isUnique = userService.isEmailUnique(email);
+
+        if (!isUnique) {
+            return ResponseEntity.status(HttpStatus.CONFLICT) // 409 Conflict
+                    .body("Email is already in use.");
+        }
+
+        return ResponseEntity.ok("Email is unique."); // 200 OK
+    }
+
+    // Endpoint to check if phone number is already in use
+    @GetMapping("/phone/{phone}")
+    public ResponseEntity<?> isPhoneUnique(@PathVariable String phone) {
+        boolean isUnique = userService.isPhoneUnique(phone);
+
+        if (!isUnique) {
+            return ResponseEntity.status(HttpStatus.CONFLICT) // 409 Conflict
+                    .body("Phone number is already in use.");
+        }
+
+        return ResponseEntity.ok("Phone number is unique."); // 200 OK
+    }
+
 }

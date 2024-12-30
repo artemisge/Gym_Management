@@ -8,12 +8,66 @@ const AddUser = ({ onClose }) => {
   const [error, setError] = useState(null); // For error handling
   const [successMessage, setSuccessMessage] = useState(''); // For success feedback
 
+  // Regular expression for phone validation
+  const phoneRegex = /^[0-9+\-]{10,15}$/;
+
+  // Regular expression for email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const validateUserUniqueness = async () => {
+    try {
+      // Check if the email already exists
+      const emailResponse = await fetch(`http://localhost:8080/users/email/${email}`);
+      if (!emailResponse.ok) {
+        setError('Email is already taken');
+        return false; // Validation failed
+      }
+
+      // Check if the phone already exists
+      const phoneResponse = await fetch(`http://localhost:8080/users/phone/${phone}`);
+      if (!phoneResponse.ok) {
+        setError('Phone number is already taken');
+        return false; // Validation failed
+      }
+
+      return true; // If both are unique, return true
+    } catch (error) {
+      throw new Error(error.message); // Propagate the error message
+    }
+  };
+
+  const validateInputs = () => {
+    setError(null); // Clear previous errors
+
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return false;
+    }
+
+    if (!phoneRegex.test(phone)) {
+      setError('Phone number must be 10-15 characters long and can only contain numbers, +, or -.');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newUser = { name, email, phone };
+    // Validate inputs before making API calls
+    if (!validateInputs()) {
+      return; // Stop submission if validation fails
+    }
 
     try {
+      // Validate user uniqueness before proceeding
+      const isValid = await validateUserUniqueness();
+      if (!isValid) {
+        return; // Stop submission if validation fails
+      }
+
+      const newUser = { name, email, phone };
       const response = await fetch('http://localhost:8080/users', {
         method: 'POST',
         headers: {
@@ -27,14 +81,14 @@ const AddUser = ({ onClose }) => {
       }
 
       const result = await response.json();
-      console.log('User added:', result); // Log the added user
       setSuccessMessage('User added successfully!');
+      onClose(true);
       setTimeout(() => {
         onClose(); // Close the modal after a delay
-      }, 1500);
+      }, 1000);
     } catch (err) {
-      console.error(err);
       setError('Failed to add the user. Please try again.');
+      console.error(err);
     }
   };
 

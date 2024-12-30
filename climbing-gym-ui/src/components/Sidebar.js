@@ -15,7 +15,7 @@ const Sidebar = () => {
               activeClassName="active" 
               className="sidebar-link"
             >
-              Home
+              Dashboard
             </NavLink>
           </li>
           <li>

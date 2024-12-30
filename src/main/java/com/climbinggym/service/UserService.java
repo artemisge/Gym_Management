@@ -13,4 +13,6 @@ public interface UserService {
     boolean isMembershipActive(Long id);
     void deleteUser(Long id);
     User updateUser(Long id, User updatedUser);
+    public boolean isPhoneUnique(String phone);
+    public boolean isEmailUnique(String email);
 }

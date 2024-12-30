@@ -85,4 +85,14 @@ public class UserServiceImplementation implements UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    // Method to check if email is unique
+    public boolean isEmailUnique(String email) {
+        return !userRepository.existsByEmail(email); // Returns true if email does not exist
+    }
+
+    // Method to check if phone is unique
+    public boolean isPhoneUnique(String phone) {
+        return !userRepository.existsByPhone(phone); // Returns true if phone does not exist
+    }
 }

@@ -1,75 +1,117 @@
-/* Payments.css */
 .payments {
-    margin-left: 250px; /* Space for the sidebar */
-    padding: 20px;
-    color: #fff;
-  }
-  
-  .payments h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #4caf50; /* Highlighted heading */
-  }
-  
-  /* Search Bar */
-  .search-bar {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #666;
-    border-radius: 5px;
-    background-color: #444;
-    color: #fff;
-  }
-  
-  .search-bar::placeholder {
-    color: #aaa;
-  }
-  
-  .search-bar:focus {
-    border-color: #4caf50;
-    outline: none;
-  }
-  
-  /* Payment List */
-  .payment-list {
-    list-style-type: none; /* Remove bullets */
-    padding-left: 0;
-  }
-  
-  .payment-item {
-    background-color: #333;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .payment-item:hover {
-    background-color: #444;
-  }
-  
-  .payment-user {
-    font-size: 18px;
-    font-weight: bold;
-    color: #fff;
-  }
-  
-  .payment-details {
-    margin-top: 5px;
-    font-size: 16px;
-    color: #ccc;
-  }
-  
-  .payment-date {
-    color: #4caf50;
-    font-style: italic;
-  }
-  
-  .payment-package {
-    margin-top: 5px;
-    font-size: 16px;
-    color: #999;
-    font-weight: bold;
-  }
-  
+  margin-left: 250px; /* Space for the sidebar */
+  padding: 20px;
+  color: #fff;
+}
+
+.payments h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #ffffff; /* Highlighted heading */
+}
+
+/* Search Bar */
+.payment-search-bar {
+  width: 70%; /* Different size for Payments search bar */
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #666;
+  border-radius: 5px;
+  background-color: #444;
+  color: #fff;
+}
+
+.payment-search-bar::placeholder {
+  color: #aaa;
+}
+
+.payment-search-bar:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Payment List */
+.payment-list {
+  list-style-type: none; /* Remove bullets */
+  padding-left: 0;
+}
+
+.payment-item {
+  background-color: #333;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: space-between; /* Space between payment info and action buttons */
+  align-items: flex-start; /* Align items to the top */
+}
+
+.payment-item:hover {
+  background-color: #444;
+}
+
+.payment-info {
+  flex: 1; /* Allow payment info to take most of the space */
+}
+
+.payment-user {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.payment-details {
+  margin-top: 5px;
+  font-size: 16px;
+  color: #ccc;
+}
+
+.payment-date {
+  color: #4caf50;
+  font-style: italic;
+}
+
+.payment-package {
+  margin-top: 5px;
+  font-size: 16px;
+  color: #999;
+  font-weight: bold;
+}
+
+/* Payment Action Buttons */
+.payment-actions {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 15px; /* Space between buttons */
+  margin-top: 10px;
+  align-self: flex-start; /* Align buttons to the top */
+}
+
+.payment-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #4caf50; /* Green button color */
+  color: #fff;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.payment-actions button:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+  transform: translateY(-2px); /* Add a subtle hover effect */
+}
+
+.payment-actions button:active {
+  transform: translateY(0); /* Reset the hover effect when clicked */
+}
+
+.payment-actions button.btn-generate-all-invoices {
+  background-color: #6200ee; /* Blue color for the "Generate All Invoices" button */
+}
+
+.payment-actions button.btn-generate-all-invoices:hover {
+  background-color: #4a00b1; /* Slightly darker blue on hover */
+}

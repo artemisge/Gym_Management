@@ -11,21 +11,35 @@ const Users = () => {
   const [sortOption, setSortOption] = useState('id');
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [showActiveUsers, setShowActiveUsers] = useState(false);
+  const [filter, setFilter] = useState('active'); // Filter for active or all users
 
-  useEffect(() => {
+  // Fetch users and membership statuses
+  const fetchUsers = () => {
     axios.get('http://localhost:8080/users')
       .then(response => {
         const usersWithStatus = response.data.map(user => ({
           ...user,
           isMembershipActive: false, // Initialize membership status
         }));
-        setUsers(usersWithStatus);
-        setFilteredUsers(usersWithStatus);
-        fetchMembershipStatuses(usersWithStatus); // Fetch membership status for each user
+
+        // Sort users by ID in ascending order (default behavior)
+        const sortedUsers = usersWithStatus.sort((a, b) => a.id - b.id);
+
+        setUsers(sortedUsers);
+        fetchMembershipStatuses(sortedUsers); // Fetch membership status for each user
       })
       .catch(error => console.error('Error fetching users:', error));
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
+
+  useEffect(() => {
+    // Apply the filter and search term on initial load or when users or filter/search term changes
+    const filtered = filterUsers(users, filter, searchTerm);
+    setFilteredUsers(filtered);
+  }, [users, filter, searchTerm]);
 
   // Fetch membership status for each user
   const fetchMembershipStatuses = (users) => {
@@ -38,30 +52,33 @@ const Users = () => {
             updatedUsers[userIndex].isMembershipActive = response.data;
           }
           setUsers(updatedUsers); // Update the users with the membership status
-          setFilteredUsers(updatedUsers); // Update filtered users as well
         })
         .catch(error => console.error('Error fetching membership status:', error));
     });
   };
 
-  // Filter users based on active status
-  const filterUsers = () => {
-    if (showActiveUsers) {
-      return users.filter(user => user.isMembershipActive);
-    }
-    return users;
+  // Filter users based on active status and search term
+  const filterUsers = (users, filter, searchTerm) => {
+    const filteredByStatus = filter === 'active'
+      ? users.filter(user => user.isMembershipActive)
+      : users;
+
+    return filteredByStatus.filter((user) =>
+      user.name.toLowerCase().includes(searchTerm) ||
+      user.email.toLowerCase().includes(searchTerm) ||
+      user.phone.toLowerCase().includes(searchTerm)
+    );
   };
 
   // Search Functionality
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const results = filterUsers().filter((user) =>
-      user.name.toLowerCase().includes(term) ||
-      user.email.toLowerCase().includes(term) ||
-      user.phone.toLowerCase().includes(term)
-    );
-    setFilteredUsers(results);
+  };
+
+  // Clear Search
+  const clearSearch = () => {
+    setSearchTerm('');
   };
 
   // Sorting Functionality
@@ -80,23 +97,39 @@ const Users = () => {
 
   // Modal Handlers
   const handleAddUser = () => setShowAddUserModal(true);
-  const handleCloseAddUserModal = () => setShowAddUserModal(false);
+  const handleCloseAddUserModal = (isUserAdded) => {
+    setShowAddUserModal(false);
+    if (isUserAdded) {
+      fetchUsers(); // Refresh user list if a user was added
+    }
+  };
+
   const handleUserDisplay = (user) => {
     window.history.pushState({}, '', `/users/${user.id}`); // Update URL
     setSelectedUser(user);
   };
-  const handleCloseUserDisplay = () => {
-    setSelectedUser(null); // Close the modal
+
+  const handleCloseUserDisplay = (isUserEdited) => {
+    setSelectedUser(null);
     window.history.pushState({}, '', '/users'); // Reset the URL to /users
+    if (isUserEdited) {
+      fetchUsers(); // Refresh the user list if a user was edited
+    }
+    // Reapply the current search term and active status filter
+    const updatedFilteredUsers = filterUsers(users, filter, searchTerm);
+    setFilteredUsers(updatedFilteredUsers);
   };
 
   // Toggle Active/All Users
-  const handleToggleActiveUsers = () => {
-    setShowActiveUsers(!showActiveUsers);
-    setFilteredUsers(filterUsers());
+  const handleToggleFilter = (status) => {
+    setFilter(status);
+    // Re-filter the users based on both active status and search term
+    const updatedFilteredUsers = filterUsers(users, status, searchTerm);
+    setFilteredUsers(updatedFilteredUsers);
   };
 
   const activeUserCount = users.filter(user => user.isMembershipActive).length;
+  const totalUserCount = users.length;
 
   return (
     <div className="users">
@@ -104,40 +137,56 @@ const Users = () => {
 
       {/* Search and Sort Controls */}
       <div className="controls">
-        <input
-          type="text"
-          placeholder="Search by name, email, or phone..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="search-bar"
-        />
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search by name, email, or phone..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="search-bar"
+          />
+          {searchTerm && (
+            <button className="clear-btn" onClick={clearSearch}>×</button>
+          )}
+        </div>
         <select value={sortOption} onChange={handleSort} className="sort-dropdown">
           <option value="id">Sort by ID</option>
           <option value="name">Sort by Name</option>
         </select>
       </div>
 
-      {/* Toggle Button for Active/All Users */}
+      {/* Toggle Buttons for Active/All Users */}
       <div className="user-filter">
         <button
-          className={`filter-btn ${showActiveUsers ? 'active' : ''}`}
-          onClick={handleToggleActiveUsers}
+          className={`filter-btn ${filter === 'active' ? 'active' : ''}`}
+          onClick={() => handleToggleFilter('active')}
         >
-          {showActiveUsers ? 'Show All Users' : 'Show Active Users'}
+          Show Active Users ({activeUserCount})
         </button>
-        <span className="user-count">
-          {showActiveUsers ? `${activeUserCount} Active` : `${users.length} Total`}
-        </span>
+        <button
+          className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+          onClick={() => handleToggleFilter('all')}
+        >
+          Show All Users ({totalUserCount})
+        </button>
       </div>
 
       {/* User List */}
       <ul className="user-list">
+        {/* Column Header */}
+        <li className="user-item user-header">
+          <div className="user-id">ID</div>
+          <div className="user-name">Name</div>
+          <div className="membership-status">Membership Status</div>
+        </li>
+
         {filteredUsers.map((user) => (
           <li
             key={user.id}
             className="user-item"
             onClick={() => handleUserDisplay(user)} // Make the whole row clickable
           >
+            <div className="user-id">{user.id}</div>
             <div className="user-name">{user.name}</div>
             <div className={`membership-status ${user.isMembershipActive ? 'active' : 'inactive'}`}>
               {user.isMembershipActive ? 'Active' : 'Inactive'}
@@ -147,7 +196,7 @@ const Users = () => {
       </ul>
 
       {/* Add New User Button */}
-      <button onClick={handleAddUser} className="add-user-button">+</button>
+      <button onClick={handleAddUser} className="add-user-button">+ Add New User</button>
 
       {/* Show Add User Modal */}
       {showAddUserModal && <AddUser onClose={handleCloseAddUserModal} />}

@@ -15,8 +15,8 @@ const Home = () => {
   const [selectedPackage, setSelectedPackage] = useState('');
   const [paymentStatus, setPaymentStatus] = useState('');
 
-  // Fetch data on component mount
-  useEffect(() => {
+  // Function to fetch data for statistics, users, and packages
+  const fetchData = () => {
     // Fetch total revenue
     axios.get('http://localhost:8080/payments/revenue') // Adjust the URL to your backend
       .then((response) => {
@@ -67,7 +67,12 @@ const Home = () => {
       .catch((error) => {
         console.error('Error fetching packages:', error);
       });
-  }, []); // Empty dependency array ensures this runs once when the component mounts
+  };
+
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -134,6 +139,8 @@ const Home = () => {
         axios.put(`http://localhost:8080/users/${user.id}/membership`, pkg)
           .then(() => {
             setPaymentStatus('Membership updated successfully!');
+            // Refetch data to update statistics and user status
+            fetchData();
           })
           .catch((error) => {
             console.error('Error updating membership:', error);
@@ -148,6 +155,10 @@ const Home = () => {
 
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase()) && user.isActive
+  );
+
+  const dropdownUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -186,14 +197,14 @@ const Home = () => {
                 onChange={handleUserSelect}
               >
                 <option value="">Select a user</option>
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map((user) => (
+                {dropdownUsers.length > 0 ? (
+                  dropdownUsers.map((user) => (
                     <option key={user.id} value={user.name}>
-                      {user.name}
+                      {`${user.id} - ${user.name}`}
                     </option>
                   ))
                 ) : (
-                  <option value="">No active users</option>
+                  <option value="">No users found</option>
                 )}
               </select>
             </div>
