@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import com.climbinggym.service.UserService;
 
 import jakarta.annotation.PostConstruct;
 import com.github.javafaker.Faker;
+import java.io.File;
 
 
 @SpringBootApplication
@@ -35,26 +37,64 @@ public class ClimbingGymSystemApplication {
 	private PackageService packageService;
 	@Autowired
 	private PaymentService paymentService;
+	
+	private static final String QR_CODE_DIRECTORY = "climbing-gym-system/src/main/resources/static/qrcodes/";
 
+
+	public void clearQRCodeDirectory() {
+		File qrDirectory = new File(QR_CODE_DIRECTORY);
+		if (qrDirectory.exists() && qrDirectory.isDirectory()) {
+			File[] files = qrDirectory.listFiles(); // List files in the directory
+			if (files != null) { // Ensure files are not null
+				for (File file : files) {
+					if (file.isFile() && file.getName().endsWith(".png")) { // Check it's a file and ends with .png
+						boolean deleted = file.delete(); // Delete the file
+						if (deleted) {
+							System.out.println("Deleted QR code file: " + file.getName());
+						} else {
+							System.err.println("Failed to delete QR code file: " + file.getName());
+						}
+					}
+				}
+			} else {
+				System.out.println("No files to delete in QR code directory.");
+			}
+		} else {
+			System.out.println("QR code directory does not exist or is not a directory.");
+		}
+	}
+
+	// Helper method to generate valid phone numbers
+	private String generateValidPhoneNumber(Random random) {
+		StringBuilder phoneBuilder = new StringBuilder();
+
+		// Optionally prepend the '+' sign
+		if (random.nextBoolean()) {
+			phoneBuilder.append("+");
+		}
+
+		// Generate 10 to 15 digits
+		int length = 10 + random.nextInt(6); // Random length between 10 and 15
+		for (int i = 0; i < length; i++) {
+			phoneBuilder.append(random.nextInt(10)); // Append a random digit (0–9)
+		}
+
+		return phoneBuilder.toString();
+	}
 	public void createFakeData() {
 		Faker faker = new Faker();
+		Random random = new Random();
+
 		for (int i = 0; i < 5; i++) {
+			String phone = generateValidPhoneNumber(random);
 			// Using the parameterized constructor to ensure non-nullable fields are set
-			User user = new User(faker.name().fullName(), faker.internet().emailAddress(), faker.phoneNumber().phoneNumber());
+			User user = new User(
+				faker.name().fullName(), 
+				faker.internet().emailAddress(), 
+				phone
+			);
 			
-			// Optionally, you can set the membership expiration date to a random future date
-			// user.setExpirationDate(faker.date().future(1, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-	
-			// Optionally, you can create fake payments here as well
-			// Payment payment = new Payment();
-			// payment.setDate(faker.date().past(30, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-			// payment.setAmount(faker.number().randomDouble(2, 10, 100));
-			// payment.setPackageType(faker.commerce().productName());
-			// payment.setUser(user);
-	
 			userService.addUser(user);
-			// If you want to save the payment:
-			// paymentRepository.save(payment);
 		}
 
 		// packages creation
@@ -95,6 +135,7 @@ public class ClimbingGymSystemApplication {
 
 	@PostConstruct
     public void init() {
+		clearQRCodeDirectory(); // Clear QR codes before starting the app
 		createFakeData();
     }
 
