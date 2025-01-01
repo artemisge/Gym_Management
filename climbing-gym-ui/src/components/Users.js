@@ -131,6 +131,20 @@ const Users = () => {
   const activeUserCount = users.filter(user => user.isMembershipActive).length;
   const totalUserCount = users.length;
 
+  // Function to delete a user
+const deleteUser = (userId) => {
+  axios
+    .delete(`http://localhost:8080/users/${userId}`)
+    .then(() => {
+      alert(`User with ID ${userId} has been successfully deleted.`);
+      fetchUsers(); // Refresh the user list after deletion
+    })
+    .catch((error) => {
+      console.error('Error deleting user:', error);
+      alert('Failed to delete the user. Please try again.');
+    });
+};
+
   return (
     <div className="users">
       <h2>Manage Users</h2>
@@ -143,7 +157,7 @@ const Users = () => {
             placeholder="Search by name, email, or phone..."
             value={searchTerm}
             onChange={handleSearch}
-            className="search-bar"
+            className="user-search-bar"
           />
           {searchTerm && (
             <button className="clear-btn" onClick={clearSearch}>×</button>
@@ -190,6 +204,24 @@ const Users = () => {
             <div className="user-name">{user.name}</div>
             <div className={`membership-status ${user.isMembershipActive ? 'active' : 'inactive'}`}>
               {user.isMembershipActive ? 'Active' : 'Inactive'}
+            </div>
+            <div
+              className="user-trash"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent row click from firing
+                if (
+                  window.confirm(
+                    `Are you sure you want to delete user ${user.name}? All payments will be deleted.`
+                  )
+                ) {
+                  deleteUser(user.id);
+                }
+              }}
+            >
+              <div className="tooltip-container">
+                🗑️ {/* Trash Icon */}
+                <span className="tooltip-text">Delete user</span>
+              </div>
             </div>
           </li>
         ))}

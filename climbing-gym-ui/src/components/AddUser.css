@@ -32,7 +32,9 @@
     border: 1px solid #666;
     border-radius: 5px;
     margin: 0 auto; /* Center the input fields */
+    margin-top: 5px;
     display: block; /* Ensure block-level layout */
+    box-sizing:unset;
 }
 
 .add-user-modal input:focus {
@@ -55,23 +57,26 @@
     cursor: pointer;
     flex: 1;
     margin-right: 10px;
+    height: 40px;
 }
 
 .add-user-btn:hover {
     background-color: #45a049;
 }
 
-.cancel-btn {
+.add-user-cancel-btn {
     background-color: #f44336; /* Red button */
     color: #fff;
     padding: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    flex: 1;
+    flex: 1;    
+    height: 40px;
+
 }
 
-.cancel-btn:hover {
+.add-user-cancel-btn:hover {
     background-color: #e53935;
 }
 

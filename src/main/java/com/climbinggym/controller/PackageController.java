@@ -1,6 +1,8 @@
 package com.climbinggym.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.climbinggym.entity.Package;
@@ -46,9 +48,15 @@ public class PackageController {
     }
 
     @DeleteMapping("/{id}")
-    public void deletePackage(@PathVariable Long id) {
-        packageService.deletePackage(id);
+    public ResponseEntity<Void> deletePackage(@PathVariable Long id) {
+        try {
+            packageService.deletePackage(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
+
 
     @PutMapping("/{id}")
     public Package updatePackage(@PathVariable Long id, @RequestBody Package updatedPackage) {

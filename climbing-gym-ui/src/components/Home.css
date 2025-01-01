@@ -12,17 +12,17 @@
 
 .content-container {
   display: flex;
-  flex-wrap: wrap; /* This will ensure stacking when the screen is small */
-  gap: 20px; /* Adjusts the space between the sections */
-  justify-content: center; /* Centers the sections within the container */
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
 }
 
 .stats {
   display: flex;
-  justify-content: space-between; /* Aligns the statistics side by side */
+  justify-content: space-between;
   width: 100%;
-  max-width: 1000px; /* Adjusts width of the stats container */
-  gap: 20px; /* Space between the two statistics cards */
+  max-width: 1000px;
+  gap: 20px;
 }
 
 .stat-card {
@@ -32,9 +32,9 @@
   color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  border: 1px solid #444; /* Border added for consistency */
-  flex: 1; /* Ensures the cards are evenly spaced */
-  min-width: 200px; /* Makes sure the cards do not shrink too small */
+  border: 1px solid #444;
+  flex: 1;
+  min-width: 200px;
 }
 
 .stat-card h3 {
@@ -49,71 +49,115 @@
   margin: 0;
 }
 
-.buy-package-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.open-popup-btn-container {
   width: 100%;
   max-width: 1000px;
+  margin-top: 40px; /* Increased gap from the stats */
+  display: flex;
+  justify-content: center;
+  gap: 80px; /* Added gap between buttons */
+}
+
+.open-popup-btn {
+  width: 350px; /* Increased width for longer buttons */
+  height: 200px;
+  background-color: #6200ee;
+  border: none;
+  padding: 20px; /* Increased padding for squarish look */
+  color: white;
+  font-size: 25px; /* Adjusted font size for wrapping text */
+  font-weight: bold;
+  border-radius: 8px; /* More rounded corners */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transition for hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow for a 3D effect */
+  text-align: center; /* Ensures text is centered */
+  white-space: normal; /* Allows text to wrap into multiple lines */
+}
+
+.open-popup-btn:hover {
+  background-color: #3700b3;
+  transform: scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+.open-popup-btn:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Modal Popup Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 250px; /* Leave space for the sidebar */
+}
+
+.modal-content {
   background-color: #333;
   border-radius: 8px;
   padding: 20px;
+  width: 400px;
+  color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid #444; /* Lighter gray border */
-  margin-top: 20px; /* Space between stats and buy package section */
+  text-align: center;
+}
+
+.modal-content h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.close-modal-btn {
+  background-color: #f44336;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-modal-btn:hover {
+  background-color: #d32f2f;
 }
 
 .dropdown-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  margin-bottom: 20px;
+
 }
 
 .dropdown {
-  position: relative;
-  width: 100%;
-  background-color: #444;
-  border: 1px solid #666;
-  border-radius: 5px;
-  padding: 10px;
-  box-sizing: border-box;
+  color:rgb(31, 31, 31);
+  margin-bottom: 15px;
+  text-align: left;
 }
 
-.dropdown-search {
-  width: 100%;
-  padding: 10px;
-  background-color: #444;
-  border: 1px solid #666;
-  color: #fff;
-  border-radius: 5px;
+.dropdown-search, .dropdown-select {
+  padding: 8px;
+  width: 350px; /* Same width for both search bar and dropdown */
   margin-bottom: 10px;
-  box-sizing: border-box;
-  font-size: 16px;
-}
-
-.dropdown-select {
-  width: 100%;
-  padding: 10px;
-  background-color: #444;
-  border: 1px solid #666;
-  color: #fff;
-  border-radius: 5px;
-  font-size: 16px;
+  background-color: #525252;
+  color: white;
 }
 
 .submit-btn {
   background-color: #4caf50;
-  border: none;
-  padding: 12px 25px;
   color: white;
+  padding: 12px;
+  width: 200px;
+  margin-top: 10px;
   font-size: 18px;
   border-radius: 5px;
+  border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%;
-  max-width: 200px; /* Keeps the button from stretching too much */
-  align-self: center; /* Centers the button */
-  margin-top: 20px;
 }
 
 .submit-btn:hover {
@@ -126,29 +170,8 @@
   opacity: 0.7;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .content-container {
-    flex-direction: column; /* Stacks sections vertically on smaller screens */
-    align-items: center; /* Centers the content */
-  }
-
-  .stats {
-    flex-direction: column; /* Stack the statistics vertically on smaller screens */
-    gap: 20px;
-  }
-
-  .buy-package-container {
-    max-width: 100%;
-    margin: 0 20px;
-  }
-
-  .dropdown-container {
-    gap: 15px;
-  }
-
-  .home h2 {
-    font-size: 24px;
-  }
+.payment-status {
+  font-size: 16px;
+  margin-top: 10px;
+  color: #ffffff; /* Red color for error messages */
 }
-

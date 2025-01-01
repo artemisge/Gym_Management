@@ -30,17 +30,20 @@ body {
   position: relative;
   flex: 2;
   margin-right: 10px;
+  height: 45px;
 }
 
-.search-bar {
+.user-search-bar {
   width: 100%;
   padding: 10px;
   border: 1px solid #666;
   border-radius: 5px;
   background-color: #444;
   color: #fff;
-  height: 20px;
+  height: 100%;
+  margin: 0;
 }
+
 
 .search-bar::placeholder {
   color: #aaa;
@@ -207,4 +210,50 @@ body {
 
 .add-user-button:hover {
   background-color: #3700b3;
+}
+
+/* Tooltip Container */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Tooltip Text */
+.tooltip-text {
+  visibility: hidden;
+  width: 100px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 12px;
+
+  /* Positioning */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Place above the trash bin */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip Arrow */
+.tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* Show Tooltip on Hover */
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }

@@ -8,16 +8,12 @@ const AddUser = ({ onClose }) => {
   const [error, setError] = useState(null); // For error handling
   const [successMessage, setSuccessMessage] = useState(''); // For success feedback
 
-  // Regular expression for phone validation
-  const phoneRegex = /^[0-9+\-]{10,15}$/;
-
-  // Regular expression for email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+  // Function to check if the email or phone already exists
   const validateUserUniqueness = async () => {
     try {
       // Check if the email already exists
       const emailResponse = await fetch(`http://localhost:8080/users/email/${email}`);
+      console.log("email" + emailResponse.ok);
       if (!emailResponse.ok) {
         setError('Email is already taken');
         return false; // Validation failed
@@ -25,6 +21,7 @@ const AddUser = ({ onClose }) => {
 
       // Check if the phone already exists
       const phoneResponse = await fetch(`http://localhost:8080/users/phone/${phone}`);
+      console.log("phone" + phoneResponse.ok);
       if (!phoneResponse.ok) {
         setError('Phone number is already taken');
         return false; // Validation failed
@@ -36,29 +33,8 @@ const AddUser = ({ onClose }) => {
     }
   };
 
-  const validateInputs = () => {
-    setError(null); // Clear previous errors
-
-    if (!emailRegex.test(email)) {
-      setError('Please enter a valid email address.');
-      return false;
-    }
-
-    if (!phoneRegex.test(phone)) {
-      setError('Phone number must be 10-15 characters long and can only contain numbers, +, or -.');
-      return false;
-    }
-
-    return true;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate inputs before making API calls
-    if (!validateInputs()) {
-      return; // Stop submission if validation fails
-    }
 
     try {
       // Validate user uniqueness before proceeding
@@ -66,7 +42,6 @@ const AddUser = ({ onClose }) => {
       if (!isValid) {
         return; // Stop submission if validation fails
       }
-
       const newUser = { name, email, phone };
       const response = await fetch('http://localhost:8080/users', {
         method: 'POST',
@@ -75,20 +50,22 @@ const AddUser = ({ onClose }) => {
         },
         body: JSON.stringify(newUser),
       });
+      console.log('Response Text:', response);
 
       if (!response.ok) {
         throw new Error('Failed to add the user');
       }
 
       const result = await response.json();
+      console.log('User added:', result); // Log the added user
       setSuccessMessage('User added successfully!');
       onClose(true);
       setTimeout(() => {
         onClose(); // Close the modal after a delay
       }, 1000);
     } catch (err) {
-      setError('Failed to add the user. Please try again.');
       console.error(err);
+      setError('Failed to add the user. Please try again.');
     }
   };
 
@@ -130,7 +107,7 @@ const AddUser = ({ onClose }) => {
             <button type="submit" className="add-user-btn">
               Add User
             </button>
-            <button type="button" className="cancel-btn" onClick={onClose}>
+            <button type="button" className="add-user-cancel-btn" onClick={onClose}>
               Cancel
             </button>
           </div>

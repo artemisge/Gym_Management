@@ -1,5 +1,9 @@
 package com.climbinggym.entity;
 import java.time.LocalDate;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 
 
@@ -13,10 +17,12 @@ public class Payment {
     
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user; // Payment made by a specific user
     
     @ManyToOne
     @JoinColumn(name = "package_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Package packageType; // Payment associated with a specific package
 
     @Column(name = "payment_date") 

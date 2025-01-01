@@ -1,14 +1,17 @@
 package com.climbinggym.controller;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.climbinggym.entity.User;
 import com.climbinggym.entity.Package;
+import com.climbinggym.service.QRCodeService;
 
 import com.climbinggym.service.UserService;
 
@@ -18,9 +21,11 @@ import com.climbinggym.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final QRCodeService qrCodeService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, QRCodeService qrCodeService) {
         this.userService = userService;
+        this.qrCodeService = qrCodeService;
     }
 
     @PostMapping
@@ -95,5 +100,4 @@ public class UserController {
 
         return ResponseEntity.ok("Phone number is unique."); // 200 OK
     }
-
 }

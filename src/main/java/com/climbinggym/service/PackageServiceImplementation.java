@@ -21,6 +21,7 @@ public class PackageServiceImplementation implements PackageService {
 
     @Override
     public Package addPackage(Package pkg) {
+        System.out.println("PACKAGE TEST LAALLALAL");
         return packageRepository.save(pkg);
     }
 

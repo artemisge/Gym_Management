@@ -14,12 +14,12 @@ import com.climbinggym.repository.UserRepository;
 public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;
-    private final QRCodeGeneratorService qrCodeGeneratorService;
+    private final QRCodeService qrCodeService;
     private final EmailService emailService;
 
-    public UserServiceImplementation(UserRepository userRepository, QRCodeGeneratorService qrCodeGeneratorService, EmailService emailService) {
+    public UserServiceImplementation(UserRepository userRepository, QRCodeService qrCodeService, EmailService emailService) {
         this.userRepository = userRepository;
-        this.qrCodeGeneratorService = qrCodeGeneratorService;
+        this.qrCodeService = qrCodeService;
         this.emailService = emailService;
     }
 
@@ -30,16 +30,14 @@ public class UserServiceImplementation implements UserService {
             System.out.println("User saved successfully: " + user);
 
             // Generate QR code after user is saved
-            try {
-                String qrcode = qrCodeGeneratorService.generateQRCodeForUser(user.getId(), user.getName());
+            // try {
+            //     String qrcode = qrCodeService.generateQRCodeForUser(user.getId(), user.getName());
                 
-                emailService.sendEmail(user.getEmail(), "welcome to gym", "QR CODE for membership, scan to enter the gym if membership is active.", qrcode);
-            } catch (Exception e) {
-                System.err.println("Error generating QR code for user: " + user.getId());
-                e.printStackTrace();
-            }
-
-            
+            //     emailService.sendEmail(user.getEmail(), "welcome to gym", "QR CODE for membership, scan to enter the gym if membership is active.", qrcode);
+            // } catch (Exception e) {
+            //     System.err.println("Error generating QR code for user: " + user.getId());
+            //     e.printStackTrace();
+            // }
 
             return user;
         } catch (DataIntegrityViolationException e) {
@@ -104,7 +102,7 @@ public class UserServiceImplementation implements UserService {
     
         // Delegate QR code deletion to the QRCodeGeneratorService
         try {
-            qrCodeGeneratorService.deleteQRCodeForUser(id.intValue());
+            qrCodeService.deleteQRCodeForUser(id.intValue());
         } catch (Exception e) {
             System.err.println("Error deleting QR code for user ID: " + id);
             e.printStackTrace();

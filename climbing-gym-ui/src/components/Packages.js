@@ -6,6 +6,7 @@ const Packages = () => {
   const [packages, setPackages] = useState([]);
   const [newPackage, setNewPackage] = useState({ name: '', price: '', duration: '', available: true });
   const [filter, setFilter] = useState('active'); // 'active' or 'all'
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     // Fetch packages from the backend
@@ -19,7 +20,7 @@ const Packages = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Ensure valid inputs
-    if (newPackage.price <= 0 || newPackage.duration <= 0) {
+    if (newPackage.price <= 0 || newPackage.durationInDays <= 0) {
       alert('Price and duration must be positive values.');
       return;
     }
@@ -30,7 +31,7 @@ const Packages = () => {
         // Add the new package to the state after successfully creating it
         setPackages([...packages, response.data]);
         setNewPackage({ name: '', price: '', duration: '', available: true });
-        document.getElementById('add-package-form').style.display = 'none';
+        setIsModalOpen(false); // Close the modal
       })
       .catch(error => {
         console.error('Error adding new package:', error);
@@ -47,11 +48,25 @@ const Packages = () => {
   };
 
   const handleDeletePackage = (id) => {
-    setPackages(packages.filter(pkg => pkg.id !== id));
-    
-    // Send delete request to backend
-    axios.delete(`http://localhost:8080/packages/${id}`)
-      .catch(error => console.error('Error deleting package:', error));
+    const packageToDelete = packages.find(pkg => pkg.id === id);
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the package "${packageToDelete.name}"? This action cannot be undone.`
+    );
+  
+    if (confirmDelete) {
+      setPackages(packages.filter(pkg => pkg.id !== id));
+  
+      // Send delete request to backend
+      axios
+        .delete(`http://localhost:8080/packages/${id}`)
+        .then(() => {
+          alert(`Package "${packageToDelete.name}" has been deleted successfully.`);
+        })
+        .catch(error => {
+          console.error('Error deleting package:', error);
+          alert(`Failed to delete the package "${packageToDelete.name}". Please try again.`);
+        });
+    }
   };
 
   const filteredPackages = packages.filter(pkg => filter === 'all' || pkg.available);
@@ -79,7 +94,7 @@ const Packages = () => {
       {/* Add New Package Button */}
       <button
         className="add-package-button"
-        onClick={() => (document.getElementById('add-package-form').style.display = 'block')}
+        onClick={() => setIsModalOpen(true)}
       >
         + Add New Package
       </button>
@@ -89,7 +104,7 @@ const Packages = () => {
         {filteredPackages.map(pkg => (
           <div className="package-item" key={pkg.id}>
             <div>
-              <strong>{pkg.name}</strong> - ${pkg.price} for {pkg.duration} day(s)
+              <strong>{pkg.name}</strong> - ${pkg.price} for {pkg.durationInDays} day(s)
             </div>
             <div>
               <span className={pkg.available ? 'status-active' : 'status-inactive'}>
@@ -104,44 +119,55 @@ const Packages = () => {
         ))}
       </div>
 
-      {/* Add Package Form (Hidden by default) */}
-      <div id="add-package-form" className="add-package-form">
-        <h3>Add New Package</h3>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Package Name"
-            value={newPackage.name}
-            onChange={(e) => setNewPackage({ ...newPackage, name: e.target.value })}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Price"
-            value={newPackage.price}
-            onChange={(e) =>
-              setNewPackage({ ...newPackage, price: e.target.value >= 0 ? e.target.value : '' })
-            }
-            required
-          />
-          <input
-            type="number"
-            placeholder="Duration (days)"
-            value={newPackage.duration}
-            onChange={(e) =>
-              setNewPackage({ ...newPackage, duration: e.target.value >= 0 ? e.target.value : '' })
-            }
-            required
-          />
-          <button type="submit">Add Package</button>
-          <button
-            type="button"
-            onClick={() => (document.getElementById('add-package-form').style.display = 'none')}
-          >
-            Cancel
-          </button>
-        </form>
-      </div>
+      {/* Add Package Form Modal */}
+      {isModalOpen && (
+        <div className="overlay">
+          <div className="add-package-modal">
+            <div className="modal-header">
+              <h3>Add New Package</h3>
+            </div>
+            <form className="packages-addform" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Package Name:</label>
+                <input
+                  type="text"
+                  value={newPackage.name}
+                  onChange={(e) => setNewPackage({ ...newPackage, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Price:</label>
+                <input
+                  type="number"
+                  value={newPackage.price}
+                  onChange={(e) =>
+                    setNewPackage({ ...newPackage, price: e.target.value >= 0 ? e.target.value : '' })
+                  }
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Duration (days):</label>
+                <input
+                  type="number"
+                  value={newPackage.durationInDays}
+                  onChange={(e) =>
+                    setNewPackage({ ...newPackage, durationInDays: e.target.value >= 0 ? e.target.value : '' })
+                  }
+                  required
+                />
+              </div>
+              <div className="modal-footer">
+                <button type="submit" className="package-submit-btn">Add Package</button>
+                <button type="button" className="package-cancel-btn" onClick={() => setIsModalOpen(false)}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
