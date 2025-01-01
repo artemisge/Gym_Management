@@ -30,14 +30,14 @@ public class UserServiceImplementation implements UserService {
             System.out.println("User saved successfully: " + user);
 
             // Generate QR code after user is saved
-            // try {
-            //     String qrcode = qrCodeService.generateQRCodeForUser(user.getId(), user.getName());
+            try {
+                String qrcode = qrCodeService.generateQRCodeForUser(user.getId(), user.getName());
                 
-            //     emailService.sendEmail(user.getEmail(), "welcome to gym", "QR CODE for membership, scan to enter the gym if membership is active.", qrcode);
-            // } catch (Exception e) {
-            //     System.err.println("Error generating QR code for user: " + user.getId());
-            //     e.printStackTrace();
-            // }
+                emailService.sendEmail(user.getEmail(), "welcome to gym", "QR CODE for membership, scan to enter the gym if membership is active.", qrcode);
+            } catch (Exception e) {
+                System.err.println("Error generating QR code for user: " + user.getId());
+                e.printStackTrace();
+            }
 
             return user;
         } catch (DataIntegrityViolationException e) {
@@ -118,4 +118,10 @@ public class UserServiceImplementation implements UserService {
     public boolean isPhoneUnique(String phone) {
         return !userRepository.existsByPhone(phone); // Returns true if phone does not exist
     }
+
+    public LocalDate getMembershipExpirationDate(Long userId) {
+        User user = getUser(userId);
+        return user.getExpirationDate();
+    }
+
 }

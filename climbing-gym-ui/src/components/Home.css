@@ -104,7 +104,7 @@
   background-color: #333;
   border-radius: 8px;
   padding: 20px;
-  width: 400px;
+  width: 500px;
   color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
@@ -175,3 +175,12 @@
   margin-top: 10px;
   color: #ffffff; /* Red color for error messages */
 }
+
+video {
+  width: 400px; /* Ensure the scanner takes up the full container */
+  height: 400px; /* Adjust height to fill container */
+  object-fit: cover; /* Maintain aspect ratio of the video feed */
+  border-radius: 8px; /* Match container's border radius */
+  margin-bottom: 20px;
+}
+

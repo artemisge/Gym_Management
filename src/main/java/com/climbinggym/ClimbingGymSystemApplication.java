@@ -135,8 +135,8 @@ public class ClimbingGymSystemApplication {
 
 	@PostConstruct
     public void init() {
-		clearQRCodeDirectory(); // Clear QR codes before starting the app
-		createFakeData();
+		// clearQRCodeDirectory(); // Clear QR codes before starting the app
+		// createFakeData();
     }
 
 	public static void main(String[] args) {

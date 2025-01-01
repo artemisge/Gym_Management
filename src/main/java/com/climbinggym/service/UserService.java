@@ -15,4 +15,5 @@ public interface UserService {
     User updateUser(Long id, User updatedUser);
     public boolean isPhoneUnique(String phone);
     public boolean isEmailUnique(String email);
+    public LocalDate getMembershipExpirationDate(Long userId);
 }

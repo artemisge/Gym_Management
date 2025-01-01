@@ -35,9 +35,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
         User user = userService.getUser(id);
-        return ResponseEntity.ok(user);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
     }
 
     @PutMapping("/{id}")
@@ -45,7 +49,7 @@ public class UserController {
         User user = userService.updateUser(id, updatedUser);
         return ResponseEntity.ok(user);
     }
-    
+
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -61,7 +65,6 @@ public class UserController {
         userService.updateMembership(id, purchasedPackage);
         return ResponseEntity.noContent().build();
     }
-
 
     @GetMapping("/{id}/membership-status")
     public ResponseEntity<Boolean> isMembershipActive(@PathVariable Long id) {
@@ -100,4 +103,25 @@ public class UserController {
 
         return ResponseEntity.ok("Phone number is unique."); // 200 OK
     }
+
+    @GetMapping("/{id}/membership-expiration")
+    public ResponseEntity<String> getMembershipExpiration(@PathVariable Long id) {
+        User user = userService.getUser(id); // Get the user from the service layer
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found");
+        }
+
+        LocalDate expirationDate = userService.getMembershipExpirationDate(id);
+
+        // If the expiration date is null, the user doesn't have an active membership
+        if (expirationDate == null) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("No active membership for this user");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Membership expiration date: " + expirationDate.toString());
+    }
+
 }
