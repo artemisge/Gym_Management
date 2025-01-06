@@ -1,18 +1,13 @@
 package com.climbinggym.controller;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.climbinggym.entity.User;
 import com.climbinggym.entity.Package;
 import com.climbinggym.service.QRCodeService;
-
 import com.climbinggym.service.UserService;
 
 @RestController
@@ -35,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
+    public ResponseEntity<?> getUser(@PathVariable Integer id) {
         User user = userService.getUser(id);
         if (user != null) {
             return ResponseEntity.ok(user);
@@ -45,7 +40,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
         User user = userService.updateUser(id, updatedUser);
         return ResponseEntity.ok(user);
     }
@@ -57,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/membership")
-    public ResponseEntity<Void> updateMembership(@PathVariable Long id, @RequestBody Package purchasedPackage) {
+    public ResponseEntity<Void> updateMembership(@PathVariable Integer id, @RequestBody Package purchasedPackage) {
         System.out.println("User ID: " + id);
         System.out.println("Purchased Package: " + purchasedPackage.getName());
         System.out.println("Duration in Days: " + purchasedPackage.getDurationInDays());
@@ -67,13 +62,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}/membership-status")
-    public ResponseEntity<Boolean> isMembershipActive(@PathVariable Long id) {
+    public ResponseEntity<Boolean> isMembershipActive(@PathVariable Integer id) {
         boolean isActive = userService.isMembershipActive(id);
         return ResponseEntity.ok(isActive);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
@@ -105,8 +100,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}/membership-expiration")
-    public ResponseEntity<String> getMembershipExpiration(@PathVariable Long id) {
-        User user = userService.getUser(id); // Get the user from the service layer
+    public ResponseEntity<String> getMembershipExpiration(@PathVariable Integer id) {
+        User user = userService.getUser(id);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("User not found");

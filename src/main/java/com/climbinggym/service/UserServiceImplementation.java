@@ -2,11 +2,9 @@ package com.climbinggym.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import com.climbinggym.entity.Package;  // Ensure this import is present
-
+import com.climbinggym.entity.Package; 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
 import com.climbinggym.entity.User;
 import com.climbinggym.repository.UserRepository;
 
@@ -47,12 +45,12 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User getUser(Long id) {
+    public User getUser(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
     }
 
-    public User updateUser(Long id, User updatedUser) {
+    public User updateUser(Integer id, User updatedUser) {
         User existingUser = userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("User not found"));
     
@@ -71,7 +69,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void updateMembership(Long userId, Package purchasedPackage) {
+    public void updateMembership(Integer userId, Package purchasedPackage) {
         // Fetch the user by ID
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -91,13 +89,13 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public boolean isMembershipActive(Long id) {
+    public boolean isMembershipActive(Integer id) {
         User user = getUser(id);
         return user.isMembershipActive();
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     
         // Delegate QR code deletion to the QRCodeGeneratorService
@@ -119,7 +117,7 @@ public class UserServiceImplementation implements UserService {
         return !userRepository.existsByPhone(phone); // Returns true if phone does not exist
     }
 
-    public LocalDate getMembershipExpirationDate(Long userId) {
+    public LocalDate getMembershipExpirationDate(Integer userId) {
         User user = getUser(userId);
         return user.getExpirationDate();
     }

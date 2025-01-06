@@ -28,7 +28,7 @@ import java.io.File;
 
 
 @SpringBootApplication
-@EntityScan(basePackages = "com.climbinggym.entity") // Replace with your entity package path
+@EntityScan(basePackages = "com.climbinggym.entity")
 public class ClimbingGymSystemApplication {
 
 	@Autowired
@@ -68,7 +68,6 @@ public class ClimbingGymSystemApplication {
 	private String generateValidPhoneNumber(Random random) {
 		StringBuilder phoneBuilder = new StringBuilder();
 
-		// Optionally prepend the '+' sign
 		if (random.nextBoolean()) {
 			phoneBuilder.append("+");
 		}
@@ -81,13 +80,14 @@ public class ClimbingGymSystemApplication {
 
 		return phoneBuilder.toString();
 	}
+
+	// creates N users (for-loop) with fake data for testing
 	public void createFakeData() {
 		Faker faker = new Faker();
 		Random random = new Random();
 
 		for (int i = 0; i < 5; i++) {
 			String phone = generateValidPhoneNumber(random);
-			// Using the parameterized constructor to ensure non-nullable fields are set
 			User user = new User(
 				faker.name().fullName(), 
 				faker.internet().emailAddress(), 
@@ -109,10 +109,10 @@ public class ClimbingGymSystemApplication {
 
 		// Add sample payments to User 1
 		// Retrieve user with ID 1
-		User user = userService.getUser(1L);
+		User user = userService.getUser(1);
 
 		// Retrieve package with ID 2
-		Package packageType = packageService.getPackageById(2L);
+		Package packageType = packageService.getPackageById(2);
 
 		// Create payment 1
 		Payment payment1 = new Payment();

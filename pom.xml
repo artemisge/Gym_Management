@@ -62,13 +62,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- H2 Database (for development) -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
 		<!-- Fake data generation library -->
 		<dependency>
 			<groupId>com.github.javafaker</groupId>
@@ -76,16 +69,12 @@
 			<version>1.0.2</version> <!-- You can check for the latest version -->
 		</dependency>
 		<!-- QR code generation -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
 			<version>3.4.1</version>
-		</dependency>
-		<!-- Email -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
+		</dependency> -->
+		
 		<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -97,10 +86,10 @@
 			<artifactId>core</artifactId>
 			<version>3.5.0</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>javase</artifactId>
-			<version>3.5.0</version>
+		 <dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>

@@ -2,10 +2,8 @@ package com.climbinggym.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.climbinggym.entity.Payment;
 import com.climbinggym.service.PaymentService;
 
@@ -27,7 +25,7 @@ public class PaymentController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Payment>> getPaymentsForUser(@PathVariable Long userId) {
+    public ResponseEntity<List<Payment>> getPaymentsForUser(@PathVariable Integer userId) {
         List<Payment> payments = paymentService.getPaymentsForUser(userId);
         return ResponseEntity.ok(payments);
     }

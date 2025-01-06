@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './AddUser.css'; // Styling for the modal
+import './AddUser.css'; 
 
 const AddUser = ({ onClose }) => {
   const [name, setName] = useState('');

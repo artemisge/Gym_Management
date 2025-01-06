@@ -1,11 +1,10 @@
 package com.climbinggym.entity;
+
 import java.time.LocalDate;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import jakarta.persistence.*;
-
 
 @Entity
 @Table(name = "PAYMENTS")
@@ -14,18 +13,18 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
+    // @OnDelete(action = OnDeleteAction.CASCADE)
     private User user; // Payment made by a specific user
-    
-    @ManyToOne
-    @JoinColumn(name = "package_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "package_id", nullable = false, foreignKey = @ForeignKey(foreignKeyDefinition = "FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE CASCADE"))
+    // @OnDelete(action = OnDeleteAction.CASCADE)
     private Package packageType; // Payment associated with a specific package
 
-    @Column(name = "payment_date") 
+    @Column(name = "payment_date")
     private LocalDate paymentDate;
 
     // Getters and Setters

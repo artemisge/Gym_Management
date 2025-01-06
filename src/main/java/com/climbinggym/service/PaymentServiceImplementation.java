@@ -2,9 +2,7 @@ package com.climbinggym.service;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
-
 import com.climbinggym.entity.Payment;
 import com.climbinggym.repository.PaymentRepository;
 
@@ -23,7 +21,7 @@ public class PaymentServiceImplementation implements PaymentService {
     }
 
     @Override
-    public List<Payment> getPaymentsForUser(Long userId) {
+    public List<Payment> getPaymentsForUser(Integer userId) {
         return paymentRepository.findByUserId(userId);
     }
 
@@ -39,7 +37,7 @@ public class PaymentServiceImplementation implements PaymentService {
 
         for (Payment payment : payments) {
             if (payment.getPackageType() != null && payment.getPackageType().getPrice() != null) {
-                totalRevenue = totalRevenue.add(payment.getPackageType().getPrice());  // Use BigDecimal's add method
+                totalRevenue = totalRevenue.add(payment.getPackageType().getPrice());
             }
         }
 

@@ -1,11 +1,10 @@
 package com.climbinggym.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.*;
-
 
 @Entity
 @Table(name = "PACKAGES")
@@ -20,15 +19,18 @@ public class Package {
 
     @JsonProperty("durationInDays")
     @Column(name = "duration_in_days")
-    private Integer durationInDays;  // Duration in days (or months)
+    private Integer durationInDays; 
 
     private Boolean available; // Indicates if the package is available for purchase
+
+    // @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<Payment> payments; // Payments associated with this package
+
 
     public Package() {
         // empty for hibernate
     }
 
-    // Constructor to initialize a Package with all fields
     public Package(String name, BigDecimal price, Integer durationInDays, Boolean available) {
         this.name = name;
         this.price = price;
