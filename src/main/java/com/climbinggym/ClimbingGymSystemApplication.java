@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.core.env.Environment;
 import org.springframework.data.repository.CrudRepository;
 
 import com.climbinggym.entity.Payment;
@@ -21,11 +22,13 @@ import com.climbinggym.repository.UserRepository;
 import com.climbinggym.service.PackageService;
 import com.climbinggym.service.PaymentService;
 import com.climbinggym.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.PostConstruct;
 import com.github.javafaker.Faker;
 import java.io.File;
-
+import java.io.IOException;
 
 @SpringBootApplication
 @EntityScan(basePackages = "com.climbinggym.entity")
@@ -37,9 +40,8 @@ public class ClimbingGymSystemApplication {
 	private PackageService packageService;
 	@Autowired
 	private PaymentService paymentService;
-	
-	private static final String QR_CODE_DIRECTORY = "climbing-gym-system/src/main/resources/static/qrcodes/";
 
+	private static final String QR_CODE_DIRECTORY = "climbing-gym-system/src/main/resources/static/qrcodes/";
 
 	public void clearQRCodeDirectory() {
 		File qrDirectory = new File(QR_CODE_DIRECTORY);
@@ -89,11 +91,10 @@ public class ClimbingGymSystemApplication {
 		for (int i = 0; i < 1; i++) {
 			String phone = generateValidPhoneNumber(random);
 			User user = new User(
-				faker.name().fullName(), 
-				faker.internet().emailAddress(), 
-				phone
-			);
-			
+					faker.name().fullName(),
+					faker.internet().emailAddress(),
+					phone);
+
 			userService.addUser(user);
 		}
 
@@ -128,16 +129,72 @@ public class ClimbingGymSystemApplication {
 
 		// Save payments
 		paymentService.makePayment(payment1);
-        paymentService.makePayment(payment2);
-		
-	}
-	
+		paymentService.makePayment(payment2);
 
+	}
+
+	public void loadTestData(String filePath) throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode rootNode = objectMapper.readTree(new File(filePath));
+
+		// Create users
+		JsonNode usersNode = rootNode.get("users");
+		usersNode.forEach(userNode -> {
+			User user = new User();
+			user.setName(userNode.get("name").asText());
+			user.setEmail(userNode.get("email").asText());
+			user.setPhone(userNode.get("phone").asText());
+			user.setExpirationDate(userNode.has("expirationDate") && !userNode.get("expirationDate").isNull()
+					? LocalDate.parse(userNode.get("expirationDate").asText())
+					: null);
+			userService.addUser(user);
+		});
+
+		// Create packages
+		JsonNode packagesNode = rootNode.get("packages");
+		packagesNode.forEach(packageNode -> {
+			Package gymPackage = new Package();
+			gymPackage.setName(packageNode.get("name").asText());
+			gymPackage.setPrice(BigDecimal.valueOf(packageNode.get("price").asDouble()));
+			gymPackage.setDurationInDays(packageNode.get("durationDays").asInt());
+			gymPackage.setAvailable(packageNode.get("available").asBoolean());
+			packageService.addPackage(gymPackage);
+		});
+
+		// Create payments
+		JsonNode paymentsNode = rootNode.get("payments");
+		paymentsNode.forEach(paymentNode -> {
+			Payment payment = new Payment();
+
+			int userId = paymentNode.get("userId").asInt();
+			Package gymPackage = packageService.getPackageById(paymentNode.get("packageId").asInt());
+
+			payment.setUser(userService.getUser(userId));
+			payment.setPackageType(gymPackage);
+			payment.setPaymentDate(LocalDate.parse(paymentNode.get("date").asText()));
+
+			paymentService.makePayment(payment);
+
+			userService.updateMembership(userId, gymPackage);
+		});
+
+		System.out.println("Test data loaded successfully!");
+	}
+
+	
+	@Autowired
+	private Environment environment;
+	
 	@PostConstruct
-    public void init() {
-		clearQRCodeDirectory(); // Clear QR codes before starting the app
-		createFakeData();
-    }
+	public void init() throws IOException {
+		if (Arrays.asList(environment.getActiveProfiles()).contains("test")) {
+			System.out.println("PRPRPPRPRPRPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
+			return; // Skip loading data in test environment
+		}
+		// clearQRCodeDirectory(); // Clear QR codes before starting the app
+		// createFakeData();
+		loadTestData("climbing-gym-system/src/main/resources/static/qrcodes/jsonDataSample/manyUsers.json");
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(ClimbingGymSystemApplication.class, args);

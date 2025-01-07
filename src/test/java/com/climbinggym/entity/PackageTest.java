@@ -15,6 +15,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.climbinggym.repository.PackageRepository;
 
+import jakarta.transaction.Transactional;
+
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional

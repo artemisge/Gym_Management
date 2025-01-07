@@ -120,27 +120,21 @@ class UserTest {
         // Save a user
         userRepository.save(user);
 
-        System.out.println("================ [4] =============");
+        System.out.println("================ [4]save user: findAll + findById=============");
         System.out.println(userRepository.findAll()); 
         System.out.println(userRepository.findById(user.getId())); 
-        System.out.println("================ [5] =============");
+        System.out.println("================ [5]delete user: findAll + findById=============");
 
         // Delete the user
         userRepository.delete(user);
 
         System.out.println(userRepository.findAll()); 
         System.out.println(userRepository.findById(user.getId())); 
-        System.out.println("================ [6] =============");
+        System.out.println("================ [6]check delete: findById=============");
 
         // Verify deletion
         Optional<User> deletedUser = userRepository.findById(user.getId());
         assertThat(deletedUser).isEmpty();
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     @Test

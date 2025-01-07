@@ -1,285 +1,289 @@
-// package com.climbinggym;
+package com.climbinggym;
 
-// import static org.mockito.Mockito.*;
-// import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-// import java.math.BigDecimal;
-// import java.time.LocalDate;
-// import java.util.Arrays;
-// import java.util.List;
-// import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
-// import javax.mail.MessagingException;
+import javax.mail.MessagingException;
 
-// import com.climbinggym.entity.*;
-// import com.climbinggym.entity.Package;
-// import com.climbinggym.repository.*;
-// import com.climbinggym.service.EmailService;
-// import com.climbinggym.service.PackageServiceImplementation;
-// import com.climbinggym.service.PaymentServiceImplementation;
-// import com.climbinggym.service.QRCodeService;
-// import com.climbinggym.service.UserServiceImplementation;
+import com.climbinggym.entity.*;
+import com.climbinggym.entity.Package;
+import com.climbinggym.repository.*;
+import com.climbinggym.service.EmailService;
+import com.climbinggym.service.PackageServiceImplementation;
+import com.climbinggym.service.PaymentServiceImplementation;
+import com.climbinggym.service.QRCodeService;
+import com.climbinggym.service.UserServiceImplementation;
 
-// import org.junit.jupiter.api.AfterEach;
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.junit.jupiter.api.extension.ExtendWith;
-// import org.mockito.InjectMocks;
-// import org.mockito.Mock;
-// import org.mockito.MockitoAnnotations;
-// import org.mockito.junit.jupiter.MockitoExtension;
-// import org.springframework.boot.context.properties.EnableConfigurationProperties;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.test.context.ActiveProfiles;
-// import org.springframework.test.context.TestPropertySource;
+import jakarta.transaction.Transactional;
 
-// @ExtendWith(MockitoExtension.class)
-// class ServiceTests {
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
-//     @Mock
-//     private UserRepository userRepository;
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
+@SpringBootTest
+@Transactional
+class ServiceTests {
 
-//     @Mock
-//     private QRCodeService qrCodeService;
+    // @Mock
+    private UserRepository userRepository;
 
-//     @Mock
-//     private EmailService emailService;
+    @Mock
+    private QRCodeService qrCodeService;
 
-//     // @Mock
-//     // private PaymentRepository paymentRepository;
+    @Mock
+    private EmailService emailService;
 
-//     // @Mock
-//     // private PackageRepository packageRepository;
+    // @Mock
+    private PaymentRepository paymentRepository;
 
-//     @InjectMocks
-//     private UserServiceImplementation userService;
+    // @Mock
+    private PackageRepository packageRepository;
 
-//     // @InjectMocks
-//     // private PaymentServiceImplementation paymentService;
+    // @InjectMocks
+    private UserServiceImplementation userService;
 
-//     // @InjectMocks
-//     // private PackageServiceImplementation packageService;
+    // @InjectMocks
+    private PaymentServiceImplementation paymentService;
 
-//     @BeforeEach
-//     void setUp() {
-//         System.out.println("HIHIHIHIHI");
-//         assertNotNull(userRepository); // Ensures the mock is not null
-//         assertNotNull(qrCodeService); // Ensures the mock is not null
-//         assertNotNull(emailService); // Ensures the mock is not null
-//         // MockitoAnnotations.openMocks(this);
-//     }
+    // @InjectMocks
+    private PackageServiceImplementation packageService;
 
-//     @AfterEach
-//     void cleanUp() {
-//         userRepository.deleteAll();
-//         // paymentRepository.deleteAll();
-//         // packageRepository.deleteAll();
-//     }
+    @BeforeEach
+    void setUp() {
+        System.out.println("HIHIHIHIHI");
+        assertNotNull(userRepository); // Ensures the mock is not null
+        assertNotNull(qrCodeService); // Ensures the mock is not null
+        assertNotNull(emailService); // Ensures the mock is not null
+        // MockitoAnnotations.openMocks(this);
+    }
 
-//     // Tests for UserServiceImplementation
-//     @Test
-//     void testAddUser() throws Exception {
-//         System.out.println("lalalallalalal");
-//         // Arrange
-//         User user = new User("John Doe", "john@example.com", "+123456789");
-//         user.setId(1);
+    @AfterEach
+    void cleanUp() {
+        // userRepository.deleteAll();
+        // paymentRepository.deleteAll();
+        // packageRepository.deleteAll();
+    }
 
-//         // Mock userRepository.save to assign an ID
-//         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
-//             User savedUser = invocation.getArgument(0); // Get the argument passed to save()
-//             savedUser.setId(1); // Simulate setting an ID (e.g., 1)
-//             return savedUser; // Return the saved user with ID
-//         });
-//         when(qrCodeService.generateQRCodeForUser(anyInt(), anyString())).thenReturn("qrcodepath");
+    // Tests for UserServiceImplementation
+    @Test
+    void testAddUser() throws Exception {
+        // Arrange
+        User user = new User("John Doe", "john@example.com", "+123456789");
+        // user.setId(1);
 
-//         // Act
-//         User result = userService.addUser(user);
+        // Mock userRepository.save to assign an ID
+        // when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+        //     User savedUser = invocation.getArgument(0); // Get the argument passed to save()
+        //     savedUser.setId(1); // Simulate setting an ID (e.g., 1)
+        //     return savedUser; // Return the saved user with ID
+        // });
+        // when(qrCodeService.generateQRCodeForUser(anyInt(), anyString())).thenReturn("qrcodepath");
 
-//         // Assert
-//         assertNotNull(result); // Check the user is returned
-//         assertEquals(1, result.getId()); // Ensure ID is assigned
-//         assertEquals("John Doe", result.getName()); // Verify name matches
+        // Act
+        User result = userService.addUser(user);
 
-//         // Verify QR code generation
-//         verify(qrCodeService, times(1)).generateQRCodeForUser(1, "John Doe");
+        // Assert
+        assertNotNull(result); // Check the user is returned
+        assertEquals(1, result.getId()); // Ensure ID is assigned
+        assertEquals("John Doe", result.getName()); // Verify name matches
 
-//         // Verify email sending
-//         verify(emailService, times(1)).sendEmail(anyString(), anyString(), anyString(), anyString());
-//     }
+        // Verify QR code generation
+        verify(qrCodeService, times(1)).generateQRCodeForUser(1, "John Doe");
 
-//     // @Test
-//     // void testGetUser() {
-//     // User user = new User("John Doe", "john@example.com", "+123456789");
-//     // when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        // Verify email sending
+        verify(emailService, times(1)).sendEmail(anyString(), anyString(), anyString(), anyString());
+    }
 
-//     // User result = userService.getUser(1);
+    // @Test
+    // void testGetUser() {
+    // User user = new User("John Doe", "john@example.com", "+123456789");
+    // when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
-//     // assertNotNull(result);
-//     // assertEquals("John Doe", result.getName());
-//     // }
+    // User result = userService.getUser(1);
 
-//     // @Test
-//     // void testUpdateMembership() {
-//     // User user = new User("John Doe", "john@example.com", "+123456789");
-//     // user.setExpirationDate(LocalDate.now());
-//     // Package pkg = new Package("Monthly", BigDecimal.valueOf(100), 30, true);
+    // assertNotNull(result);
+    // assertEquals("John Doe", result.getName());
+    // }
 
-//     // when(userRepository.findById(1)).thenReturn(Optional.of(user));
-//     // when(userRepository.save(any(User.class))).thenReturn(user);
+    // @Test
+    // void testUpdateMembership() {
+    // User user = new User("John Doe", "john@example.com", "+123456789");
+    // user.setExpirationDate(LocalDate.now());
+    // Package pkg = new Package("Monthly", BigDecimal.valueOf(100), 30, true);
 
-//     // userService.updateMembership(1, pkg);
+    // when(userRepository.findById(1)).thenReturn(Optional.of(user));
+    // when(userRepository.save(any(User.class))).thenReturn(user);
 
-//     // assertEquals(LocalDate.now().plusDays(30), user.getExpirationDate());
-//     // verify(userRepository, times(1)).save(user);
-//     // }
+    // userService.updateMembership(1, pkg);
 
-//     // @Test
-//     // void testIsMembershipActive() {
-//     // User user = new User("John Doe", "john@example.com", "+123456789");
-//     // user.setExpirationDate(LocalDate.now().plusDays(5));
-//     // when(userRepository.findById(1)).thenReturn(Optional.of(user));
+    // assertEquals(LocalDate.now().plusDays(30), user.getExpirationDate());
+    // verify(userRepository, times(1)).save(user);
+    // }
 
-//     // boolean isActive = userService.isMembershipActive(1);
+    // @Test
+    // void testIsMembershipActive() {
+    // User user = new User("John Doe", "john@example.com", "+123456789");
+    // user.setExpirationDate(LocalDate.now().plusDays(5));
+    // when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
-//     // assertTrue(isActive);
-//     // }
+    // boolean isActive = userService.isMembershipActive(1);
 
-//     // @Test
-//     // void testDeleteUser() {
-//     // doNothing().when(userRepository).deleteById(1);
-//     // doNothing().when(qrCodeService).deleteQRCodeForUser(1);
+    // assertTrue(isActive);
+    // }
 
-//     // userService.deleteUser(1);
+    // @Test
+    // void testDeleteUser() {
+    // doNothing().when(userRepository).deleteById(1);
+    // doNothing().when(qrCodeService).deleteQRCodeForUser(1);
 
-//     // verify(userRepository, times(1)).deleteById(1);
-//     // verify(qrCodeService, times(1)).deleteQRCodeForUser(1);
-//     // }
+    // userService.deleteUser(1);
 
-//     // // Tests for PaymentServiceImplementation
-//     // @Test
-//     // void testMakePayment() {
-//     // // Create User and Package for the test
-//     // User user = new User("John Doe", "john@example.com", "+123456789");
-//     // Package pkg = new Package("Monthly", BigDecimal.valueOf(100), 30, true);
+    // verify(userRepository, times(1)).deleteById(1);
+    // verify(qrCodeService, times(1)).deleteQRCodeForUser(1);
+    // }
 
-//     // // Create Payment and associate with User and Package
-//     // Payment payment = new Payment();
-//     // payment.setUser(user);
-//     // payment.setPackageType(pkg);
-//     // payment.setPaymentDate(LocalDate.now());
+    // // Tests for PaymentServiceImplementation
+    // @Test
+    // void testMakePayment() {
+    // // Create User and Package for the test
+    // User user = new User("John Doe", "john@example.com", "+123456789");
+    // Package pkg = new Package("Monthly", BigDecimal.valueOf(100), 30, true);
 
-//     // // Mock the repository save method to return the created payment
-//     // when(paymentRepository.save(payment)).thenReturn(payment);
+    // // Create Payment and associate with User and Package
+    // Payment payment = new Payment();
+    // payment.setUser(user);
+    // payment.setPackageType(pkg);
+    // payment.setPaymentDate(LocalDate.now());
 
-//     // // Call the service method to make a payment
-//     // Payment result = paymentService.makePayment(payment);
+    // // Mock the repository save method to return the created payment
+    // when(paymentRepository.save(payment)).thenReturn(payment);
 
-//     // // Assert that the payment is not null and the package price is correct
-//     // assertNotNull(result);
-//     // assertEquals(BigDecimal.valueOf(100), result.getPackageType().getPrice());
-//     // assertEquals(user, result.getUser());
-//     // assertEquals(pkg, result.getPackageType());
-//     // }
+    // // Call the service method to make a payment
+    // Payment result = paymentService.makePayment(payment);
 
-//     // @Test
-//     // void testGetPaymentsForUser() {
-//     // // Create User and Package for the test
-//     // User user = new User("John Doe", "john@example.com", "+123456789");
-//     // Package pkg1 = new Package("Monthly", BigDecimal.valueOf(50), 30, true);
-//     // Package pkg2 = new Package("Weekly", BigDecimal.valueOf(100), 7, true);
+    // // Assert that the payment is not null and the package price is correct
+    // assertNotNull(result);
+    // assertEquals(BigDecimal.valueOf(100), result.getPackageType().getPrice());
+    // assertEquals(user, result.getUser());
+    // assertEquals(pkg, result.getPackageType());
+    // }
 
-//     // // Create Payments and associate with User and Package
-//     // Payment payment1 = new Payment();
-//     // payment1.setUser(user);
-//     // payment1.setPackageType(pkg1);
-//     // payment1.setPaymentDate(LocalDate.now());
+    // @Test
+    // void testGetPaymentsForUser() {
+    // // Create User and Package for the test
+    // User user = new User("John Doe", "john@example.com", "+123456789");
+    // Package pkg1 = new Package("Monthly", BigDecimal.valueOf(50), 30, true);
+    // Package pkg2 = new Package("Weekly", BigDecimal.valueOf(100), 7, true);
 
-//     // Payment payment2 = new Payment();
-//     // payment2.setUser(user);
-//     // payment2.setPackageType(pkg2);
-//     // payment2.setPaymentDate(LocalDate.now());
+    // // Create Payments and associate with User and Package
+    // Payment payment1 = new Payment();
+    // payment1.setUser(user);
+    // payment1.setPackageType(pkg1);
+    // payment1.setPaymentDate(LocalDate.now());
 
-//     // // Mock the repository call
-//     // when(paymentRepository.findByUserId(1)).thenReturn(Arrays.asList(payment1,
-//     // payment2));
+    // Payment payment2 = new Payment();
+    // payment2.setUser(user);
+    // payment2.setPackageType(pkg2);
+    // payment2.setPaymentDate(LocalDate.now());
 
-//     // // Get payments for the user
-//     // List<Payment> payments = paymentService.getPaymentsForUser(1);
+    // // Mock the repository call
+    // when(paymentRepository.findByUserId(1)).thenReturn(Arrays.asList(payment1,
+    // payment2));
 
-//     // // Assert the payments list size and prices
-//     // assertEquals(2, payments.size());
-//     // assertEquals(BigDecimal.valueOf(50),
-//     // payments.get(0).getPackageType().getPrice());
-//     // assertEquals(BigDecimal.valueOf(100),
-//     // payments.get(1).getPackageType().getPrice());
-//     // }
+    // // Get payments for the user
+    // List<Payment> payments = paymentService.getPaymentsForUser(1);
 
-//     // @Test
-//     // void testCalculateTotalRevenue() {
-//     // // Create User and Package for the test
-//     // User user1 = new User("John Doe", "john@example.com", "+123456789");
-//     // User user2 = new User("Jane Doe", "jane@example.com", "+987654321");
+    // // Assert the payments list size and prices
+    // assertEquals(2, payments.size());
+    // assertEquals(BigDecimal.valueOf(50),
+    // payments.get(0).getPackageType().getPrice());
+    // assertEquals(BigDecimal.valueOf(100),
+    // payments.get(1).getPackageType().getPrice());
+    // }
 
-//     // Package pkg1 = new Package("Monthly", BigDecimal.valueOf(50), 30, true);
-//     // Package pkg2 = new Package("Weekly", BigDecimal.valueOf(20), 7, true);
+    // @Test
+    // void testCalculateTotalRevenue() {
+    // // Create User and Package for the test
+    // User user1 = new User("John Doe", "john@example.com", "+123456789");
+    // User user2 = new User("Jane Doe", "jane@example.com", "+987654321");
 
-//     // // Create Payments and associate with User and Package
-//     // Payment payment1 = new Payment();
-//     // payment1.setPackageType(pkg1);
-//     // payment1.setUser(user1);
-//     // payment1.setPaymentDate(LocalDate.now());
+    // Package pkg1 = new Package("Monthly", BigDecimal.valueOf(50), 30, true);
+    // Package pkg2 = new Package("Weekly", BigDecimal.valueOf(20), 7, true);
 
-//     // Payment payment2 = new Payment();
-//     // payment2.setPackageType(pkg2);
-//     // payment2.setUser(user2);
-//     // payment2.setPaymentDate(LocalDate.now());
-//     // System.out.println("TESTTT");
-//     // // Mock the repository calls
-//     // when(paymentRepository.findAll()).thenReturn(Arrays.asList(payment1,
-//     // payment2));
+    // // Create Payments and associate with User and Package
+    // Payment payment1 = new Payment();
+    // payment1.setPackageType(pkg1);
+    // payment1.setUser(user1);
+    // payment1.setPaymentDate(LocalDate.now());
 
-//     // System.out.println("PAYMENTS"+paymentService.getAllPayments());
-//     // // Calculate total revenue
-//     // BigDecimal totalRevenue = paymentService.calculateTotalRevenue();
+    // Payment payment2 = new Payment();
+    // payment2.setPackageType(pkg2);
+    // payment2.setUser(user2);
+    // payment2.setPaymentDate(LocalDate.now());
+    // System.out.println("TESTTT");
+    // // Mock the repository calls
+    // when(paymentRepository.findAll()).thenReturn(Arrays.asList(payment1,
+    // payment2));
 
-//     // // Assert the total revenue matches the expected value
-//     // assertEquals(BigDecimal.valueOf(70), totalRevenue);
-//     // }
+    // System.out.println("PAYMENTS"+paymentService.getAllPayments());
+    // // Calculate total revenue
+    // BigDecimal totalRevenue = paymentService.calculateTotalRevenue();
 
-//     // // Tests for PackageServiceImplementation
-//     // @Test
-//     // void testAddPackage() {
-//     // Package pkg = new Package("Weekly", BigDecimal.valueOf(20), 7, true);
-//     // when(packageRepository.save(pkg)).thenReturn(pkg);
+    // // Assert the total revenue matches the expected value
+    // assertEquals(BigDecimal.valueOf(70), totalRevenue);
+    // }
 
-//     // Package result = packageService.addPackage(pkg);
-//     // System.out.println(result);
-//     // assertNotNull(result);
-//     // assertEquals("Weekly", result.getName());
-//     // }
+    // // Tests for PackageServiceImplementation
+    // @Test
+    // void testAddPackage() {
+    // Package pkg = new Package("Weekly", BigDecimal.valueOf(20), 7, true);
+    // when(packageRepository.save(pkg)).thenReturn(pkg);
 
-//     // @Test
-//     // void testGetAllPackages() {
-//     // Package pkg1 = new Package("Weekly", BigDecimal.valueOf(20), 7, true);
-//     // Package pkg2 = new Package("Monthly", BigDecimal.valueOf(50), 30, true);
+    // Package result = packageService.addPackage(pkg);
+    // System.out.println(result);
+    // assertNotNull(result);
+    // assertEquals("Weekly", result.getName());
+    // }
 
-//     // when(packageRepository.findAll()).thenReturn(Arrays.asList(pkg1, pkg2));
+    // @Test
+    // void testGetAllPackages() {
+    // Package pkg1 = new Package("Weekly", BigDecimal.valueOf(20), 7, true);
+    // Package pkg2 = new Package("Monthly", BigDecimal.valueOf(50), 30, true);
 
-//     // List<Package> packages = packageService.getAllPackages();
+    // when(packageRepository.findAll()).thenReturn(Arrays.asList(pkg1, pkg2));
 
-//     // assertEquals(2, packages.size());
-//     // assertEquals("Weekly", packages.get(0).getName());
-//     // }
+    // List<Package> packages = packageService.getAllPackages();
 
-//     // @Test
-//     // void testGetPackageById() {
-//     // Package pkg = new Package("Weekly", BigDecimal.valueOf(20), 7, true);
-//     // when(packageRepository.findById(1)).thenReturn(Optional.of(pkg));
+    // assertEquals(2, packages.size());
+    // assertEquals("Weekly", packages.get(0).getName());
+    // }
 
-//     // Package result = packageService.getPackageById(1);
+    // @Test
+    // void testGetPackageById() {
+    // Package pkg = new Package("Weekly", BigDecimal.valueOf(20), 7, true);
+    // when(packageRepository.findById(1)).thenReturn(Optional.of(pkg));
 
-//     // assertNotNull(result);
-//     // assertEquals("Weekly", result.getName());
-//     // }
-// }
+    // Package result = packageService.getPackageById(1);
+
+    // assertNotNull(result);
+    // assertEquals("Weekly", result.getName());
+    // }
+}
