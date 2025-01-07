@@ -86,7 +86,7 @@ public class ClimbingGymSystemApplication {
 		Faker faker = new Faker();
 		Random random = new Random();
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 1; i++) {
 			String phone = generateValidPhoneNumber(random);
 			User user = new User(
 				faker.name().fullName(), 
@@ -135,8 +135,8 @@ public class ClimbingGymSystemApplication {
 
 	@PostConstruct
     public void init() {
-		// clearQRCodeDirectory(); // Clear QR codes before starting the app
-		// createFakeData();
+		clearQRCodeDirectory(); // Clear QR codes before starting the app
+		createFakeData();
     }
 
 	public static void main(String[] args) {

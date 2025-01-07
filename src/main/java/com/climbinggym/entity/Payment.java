@@ -14,18 +14,22 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
-    // @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne //(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)//, foreignKey = @ForeignKey(foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user; // Payment made by a specific user
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "package_id", nullable = false, foreignKey = @ForeignKey(foreignKeyDefinition = "FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE CASCADE"))
-    // @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne //(cascade = CascadeType.ALL)
+    @JoinColumn(name = "package_id", nullable = false)//, foreignKey = @ForeignKey(foreignKeyDefinition = "FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE CASCADE"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Package packageType; // Payment associated with a specific package
 
     @Column(name = "payment_date")
     private LocalDate paymentDate;
+
+    // public Payment(){
+        
+    // }
 
     // Getters and Setters
     public Integer getId() {

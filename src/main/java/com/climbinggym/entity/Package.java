@@ -1,6 +1,7 @@
 package com.climbinggym.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,8 +24,8 @@ public class Package {
 
     private Boolean available; // Indicates if the package is available for purchase
 
-    // @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<Payment> payments; // Payments associated with this package
+    // @OneToMany(mappedBy = "packageType", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<Payment> payments = new ArrayList<>();
 
 
     public Package() {

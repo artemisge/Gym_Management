@@ -25,11 +25,9 @@ public class User {
 
     @Column(name = "membership_expiration") 
     private LocalDate membershipExpirationDate;
-// @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//     private List<Payment> payments = new ArrayList<>();
-    // @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<Payment> payments; // Payments associated with this package
-
+    
+    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<Payment> payments = new ArrayList<>();
 
     public User(){
         // empty constructor for hibernate
