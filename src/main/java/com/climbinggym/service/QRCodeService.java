@@ -30,6 +30,7 @@ public class QRCodeService {
 
         // Generate and save the QR code as an image
         createQRCodeImage(qrCodeData, qrFilePath);
+        System.out.println("PAPAPAPAPPAPAPPAP");
 
         return qrFilePath;
     }

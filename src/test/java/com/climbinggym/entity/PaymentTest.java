@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -37,6 +38,13 @@ public class PaymentTest {
 
     @Autowired
     private PackageRepository packageRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        userRepository.deleteAll();
+        paymentRepository.deleteAll();
+        packageRepository.deleteAll();
+    }
 
     @Test
     void testSaveAndRetrievePayment() {
@@ -160,23 +168,25 @@ public class PaymentTest {
         assertThat(deletedPayment).isNull();
     }
 
-    // @Transactional
     // @Test
     // void testCascadeDeleteUser() {
     //     // Create and Save User
     //     User user = new User("Cascade Test User", "cascade.user@example.com", "6677889900");
-    //     userRepository.saveAndFlush(user);
+    //     userRepository.save(user);
+    //     userRepository.flush();
 
     //     // Create and Save Package
     //     Package packageEntity = new Package("Cascade Test Package", BigDecimal.valueOf(100.00), 30, true);
-    //     packageRepository.saveAndFlush(packageEntity);
+    //     packageRepository.save(packageEntity);
+    //     packageRepository.flush();
 
     //     // Create and Save Payment
     //     Payment payment = new Payment();
     //     payment.setUser(user);
     //     payment.setPackageType(packageEntity);
     //     payment.setPaymentDate(LocalDate.now());
-    //     paymentRepository.saveAndFlush(payment);
+    //     paymentRepository.save(payment);
+    //     paymentRepository.flush();
 
     //     // Verify initial state
     //     assertThat(userRepository.findAll()).hasSize(1);
@@ -193,76 +203,83 @@ public class PaymentTest {
 
     // @Test
     // void testCascadeDeleteUser2() throws InterruptedException {
-    //     // Create and Save User
-    //     User user = new User("Cascade Test User", "cascade.user@example.com", "6677889900");
-    //     userRepository.save(user);
+    // // Create and Save User
+    // User user = new User("Cascade Test User", "cascade.user@example.com",
+    // "6677889900");
+    // userRepository.save(user);
 
-    //     User user2 = new User("Cascade Test User 2", "caascade.user@example.com", "66778891900");
-    //     userRepository.save(user2);
-    //     userRepository.delete(user2);
-    //     System.out.println("USER2222222222222222222222222222222222222222");
-    //     Optional<User> deletedUser = userRepository.findById(user2.getId());
-    //     assertThat(deletedUser).isEmpty();
+    // User user2 = new User("Cascade Test User 2", "caascade.user@example.com",
+    // "66778891900");
+    // userRepository.save(user2);
+    // userRepository.delete(user2);
+    // System.out.println("USER2222222222222222222222222222222222222222");
+    // Optional<User> deletedUser = userRepository.findById(user2.getId());
+    // assertThat(deletedUser).isEmpty();
 
-    //     // Create and Save Package
-    //     Package packageEntity = new Package("Cascade Test Package", BigDecimal.valueOf(100.00), 30, true);
-    //     packageRepository.save(packageEntity);
+    // // Create and Save Package
+    // Package packageEntity = new Package("Cascade Test Package",
+    // BigDecimal.valueOf(100.00), 30, true);
+    // packageRepository.save(packageEntity);
 
-    //     // Create and Save Payment
-    //     Payment payment = new Payment();
-    //     payment.setUser(user);
-    //     payment.setPackageType(packageEntity);
-    //     payment.setPaymentDate(LocalDate.now());
-    //     paymentRepository.save(payment);
-    //     int uid = user2.getId();
-    //     int pid = payment.getId();
+    // // Create and Save Payment
+    // Payment payment = new Payment();
+    // payment.setUser(user);
+    // payment.setPackageType(packageEntity);
+    // payment.setPaymentDate(LocalDate.now());
+    // paymentRepository.save(payment);
+    // int uid = user2.getId();
+    // int pid = payment.getId();
 
-    //     System.out.println("================ [1] =============");
-    //     System.out.println(userRepository.findAll());
-    //     System.out.println(userRepository.findById(uid));
-    //     System.out.println(packageRepository.findAll());
-    //     System.out.println(paymentRepository.findAll());
-    //     System.out.println(paymentRepository.findById(pid));
-    //     System.out.println("================ [2] =============");
-    //     // Delete User and Verify Cascade
-    //     userRepository.deleteAllInBatch(); // (user);
-    //     userRepository.flush();
-    //     packageRepository.flush();
-    //     paymentRepository.flush();
-    //     System.out.println(userRepository.findAll());
-    //     System.out.println(userRepository.findById(uid));
-    //     System.out.println(packageRepository.findAll());
-    //     System.out.println(paymentRepository.findAll());
-    //     System.out.println(paymentRepository.findById(pid));
-    //     System.out.println("================ [3] =============");
-    //     System.out.println(pid);
-    //     // paymentRepository.delete(payment);//TREXEI ETSI. alla to cascade den douleuei
-    //     Optional<Payment> deletedPayment = paymentRepository.findById(pid);
-    //     // assertThat(deletedPayment).isEmpty();
+    // System.out.println("================ [1] =============");
+    // System.out.println(userRepository.findAll());
+    // System.out.println(userRepository.findById(uid));
+    // System.out.println(packageRepository.findAll());
+    // System.out.println(paymentRepository.findAll());
+    // System.out.println(paymentRepository.findById(pid));
+    // System.out.println("================ [2] =============");
+    // // Delete User and Verify Cascade
+    // userRepository.deleteAllInBatch(); // (user);
+    // userRepository.flush();
+    // packageRepository.flush();
+    // paymentRepository.flush();
+    // System.out.println(userRepository.findAll());
+    // System.out.println(userRepository.findById(uid));
+    // System.out.println(packageRepository.findAll());
+    // System.out.println(paymentRepository.findAll());
+    // System.out.println(paymentRepository.findById(pid));
+    // System.out.println("================ [3] =============");
+    // System.out.println(pid);
+    // // paymentRepository.delete(payment);//TREXEI ETSI. alla to cascade den
+    // douleuei
+    // Optional<Payment> deletedPayment = paymentRepository.findById(pid);
+    // // assertThat(deletedPayment).isEmpty();
     // }
 
     // @Transactional
     // @Test
     // void testCascadeDeletePackage() {
-    //     // Create and Save User
-    //     User user = new User("Cascade Test User 2", "cascade2.user@example.com", "2233445566");
-    //     userRepository.save(user);
+    // // Create and Save User
+    // User user = new User("Cascade Test User 2", "cascade2.user@example.com",
+    // "2233445566");
+    // userRepository.save(user);
 
-    //     // Create and Save Package
-    //     Package packageEntity = new Package("Cascade Test Package 2", BigDecimal.valueOf(120.00), 60, true);
-    //     packageRepository.save(packageEntity);
+    // // Create and Save Package
+    // Package packageEntity = new Package("Cascade Test Package 2",
+    // BigDecimal.valueOf(120.00), 60, true);
+    // packageRepository.save(packageEntity);
 
-    //     // Create and Save Payment
-    //     Payment payment = new Payment();
-    //     payment.setUser(user);
-    //     payment.setPackageType(packageEntity);
-    //     payment.setPaymentDate(LocalDate.now());
-    //     paymentRepository.save(payment);
+    // // Create and Save Payment
+    // Payment payment = new Payment();
+    // payment.setUser(user);
+    // payment.setPackageType(packageEntity);
+    // payment.setPaymentDate(LocalDate.now());
+    // paymentRepository.save(payment);
 
-    //     // Delete Package and Verify Cascade
-    //     packageRepository.delete(packageEntity);
+    // // Delete Package and Verify Cascade
+    // packageRepository.delete(packageEntity);
 
-    //     Payment deletedPayment = paymentRepository.findById(payment.getId()).orElse(null);
-    //     // assertThat(deletedPayment).isNull();
+    // Payment deletedPayment =
+    // paymentRepository.findById(payment.getId()).orElse(null);
+    // // assertThat(deletedPayment).isNull();
     // }
 }

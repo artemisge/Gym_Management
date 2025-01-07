@@ -188,12 +188,11 @@ public class ClimbingGymSystemApplication {
 	@PostConstruct
 	public void init() throws IOException {
 		if (Arrays.asList(environment.getActiveProfiles()).contains("test")) {
-			System.out.println("PRPRPPRPRPRPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
 			return; // Skip loading data in test environment
 		}
 		// clearQRCodeDirectory(); // Clear QR codes before starting the app
 		// createFakeData();
-		loadTestData("climbing-gym-system/src/main/resources/static/qrcodes/jsonDataSample/manyUsers.json");
+		loadTestData("climbing-gym-system/src/main/resources/static/jsonDataSample/manyUsers.json");
 	}
 
 	public static void main(String[] args) {
