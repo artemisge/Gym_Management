@@ -24,6 +24,7 @@ public class PaymentController {
         return ResponseEntity.ok(createdPayment);
     }
 
+    // Returns all payments associated with a specific user
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Payment>> getPaymentsForUser(@PathVariable Integer userId) {
         List<Payment> payments = paymentService.getPaymentsForUser(userId);

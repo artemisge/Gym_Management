@@ -1,29 +1,38 @@
-import React, { useState } from 'react';
-import './AddUser.css'; 
+import React, { useState } from "react";
+import "./AddUser.css";
 
 const AddUser = ({ onClose }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState(null); // For error handling
-  const [successMessage, setSuccessMessage] = useState(''); // For success feedback
+  const [successMessage, setSuccessMessage] = useState(""); // For success feedback
+
+  // Regex for phone number/email validation
+  const phoneRegex = /^[+]?[\d-]{10,15}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // For email validation
+
 
   // Function to check if the email or phone already exists
   const validateUserUniqueness = async () => {
     try {
       // Check if the email already exists
-      const emailResponse = await fetch(`http://localhost:8080/users/email/${email}`);
+      const emailResponse = await fetch(
+        `http://localhost:8080/users/email/${email}`
+      );
       console.log("email" + emailResponse.ok);
       if (!emailResponse.ok) {
-        setError('Email is already taken');
+        setError("Email is already taken");
         return false; // Validation failed
       }
 
       // Check if the phone already exists
-      const phoneResponse = await fetch(`http://localhost:8080/users/phone/${phone}`);
+      const phoneResponse = await fetch(
+        `http://localhost:8080/users/phone/${phone}`
+      );
       console.log("phone" + phoneResponse.ok);
       if (!phoneResponse.ok) {
-        setError('Phone number is already taken');
+        setError("Phone number is already taken");
         return false; // Validation failed
       }
 
@@ -36,6 +45,18 @@ const AddUser = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate email format
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    // Validate phone number format
+    if (!phoneRegex.test(phone)) {
+      setError('Phone number must be 10-15 digits and can include + or -');
+      return;
+    }
+
     try {
       // Validate user uniqueness before proceeding
       const isValid = await validateUserUniqueness();
@@ -43,29 +64,29 @@ const AddUser = ({ onClose }) => {
         return; // Stop submission if validation fails
       }
       const newUser = { name, email, phone };
-      const response = await fetch('http://localhost:8080/users', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/users", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(newUser),
       });
-      console.log('Response Text:', response);
+      console.log("Response Text:", response);
 
       if (!response.ok) {
-        throw new Error('Failed to add the user');
+        throw new Error("Failed to add the user");
       }
 
       const result = await response.json();
-      console.log('User added:', result); // Log the added user
-      setSuccessMessage('User added successfully!');
+      console.log("User added:", result); // Log the added user
+      setSuccessMessage("User added successfully!");
       onClose(true);
       setTimeout(() => {
         onClose(); // Close the modal after a delay
       }, 1000);
     } catch (err) {
       console.error(err);
-      setError('Failed to add the user. Please try again.');
+      setError("Failed to add the user. Please try again.");
     }
   };
 
@@ -107,7 +128,11 @@ const AddUser = ({ onClose }) => {
             <button type="submit" className="add-user-btn">
               Add User
             </button>
-            <button type="button" className="add-user-cancel-btn" onClick={onClose}>
+            <button
+              type="button"
+              className="add-user-cancel-btn"
+              onClick={onClose}
+            >
               Cancel
             </button>
           </div>

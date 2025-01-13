@@ -88,7 +88,7 @@ public class ClimbingGymSystemApplication {
 		Faker faker = new Faker();
 		Random random = new Random();
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 5; i++) {
 			String phone = generateValidPhoneNumber(random);
 			User user = new User(
 					faker.name().fullName(),
@@ -187,12 +187,12 @@ public class ClimbingGymSystemApplication {
 	
 	@PostConstruct
 	public void init() throws IOException {
-		if (Arrays.asList(environment.getActiveProfiles()).contains("test")) {
-			return; // Skip loading data in test environment
-		}
-		// clearQRCodeDirectory(); // Clear QR codes before starting the app
-		// createFakeData();
-		loadTestData("climbing-gym-system/src/main/resources/static/jsonDataSample/manyUsers.json");
+		// if (Arrays.asList(environment.getActiveProfiles()).contains("test")) {
+		// 	return; // Skip loading data in test environment
+		// }
+		clearQRCodeDirectory(); // Clear QR codes before starting the app
+		createFakeData();
+		// loadTestData("climbing-gym-system/src/main/resources/static/jsonDataSample/manyUsers.json");
 	}
 
 	public static void main(String[] args) {

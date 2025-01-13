@@ -14,13 +14,15 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne //(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false)//, foreignKey = @ForeignKey(foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"))
+    // A payment is connected to a user and a package
+    // If the user or the package is deleted, payment should also be deleted
+    @ManyToOne 
+    @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user; // Payment made by a specific user
 
-    @ManyToOne //(cascade = CascadeType.ALL)
-    @JoinColumn(name = "package_id", nullable = false)//, foreignKey = @ForeignKey(foreignKeyDefinition = "FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE CASCADE"))
+    @ManyToOne
+    @JoinColumn(name = "package_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Package packageType; // Payment associated with a specific package
 

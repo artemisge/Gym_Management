@@ -30,6 +30,7 @@ public class PaymentServiceImplementation implements PaymentService {
         return paymentRepository.findAll();
     }
 
+    // Sums all current payments to calculate total revenue 
     @Override
     public BigDecimal calculateTotalRevenue() {
         List<Payment> payments = paymentRepository.findAll();

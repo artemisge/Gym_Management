@@ -39,7 +39,7 @@ public class EmailService {
         } catch (jakarta.mail.MessagingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } // Enable multipart for attachments
+        }
 
         
     }

@@ -53,9 +53,9 @@ public class UserController {
 
     @PutMapping("/{id}/membership")
     public ResponseEntity<Void> updateMembership(@PathVariable Integer id, @RequestBody Package purchasedPackage) {
-        System.out.println("User ID: " + id);
-        System.out.println("Purchased Package: " + purchasedPackage.getName());
-        System.out.println("Duration in Days: " + purchasedPackage.getDurationInDays());
+        // System.out.println("User ID: " + id);
+        // System.out.println("Purchased Package: " + purchasedPackage.getName());
+        // System.out.println("Duration in Days: " + purchasedPackage.getDurationInDays());
 
         userService.updateMembership(id, purchasedPackage);
         return ResponseEntity.noContent().build();
@@ -99,6 +99,7 @@ public class UserController {
         return ResponseEntity.ok("Phone number is unique."); // 200 OK
     }
 
+    // Returns user's membership expiration date or null if membership is inactive
     @GetMapping("/{id}/membership-expiration")
     public ResponseEntity<String> getMembershipExpiration(@PathVariable Integer id) {
         User user = userService.getUser(id);

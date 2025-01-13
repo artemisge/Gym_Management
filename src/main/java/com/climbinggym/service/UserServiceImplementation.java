@@ -32,8 +32,8 @@ public class UserServiceImplementation implements UserService {
             try {
                 String qrcode = qrCodeService.generateQRCodeForUser(user.getId(), user.getName());
 
-                emailService.sendEmail(user.getEmail(), "welcome to gym",
-                        "QR CODE for membership, scan to enter the gym if membership is active.", qrcode);
+                // emailService.sendEmail(user.getEmail(), "welcome to gym",
+                //         "QR CODE for membership, scan to enter the gym if membership is active.", qrcode);
             } catch (Exception e) {
                 System.err.println("Error generating QR code for user: " + user.getId());
                 e.printStackTrace();

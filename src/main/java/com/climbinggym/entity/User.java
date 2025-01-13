@@ -17,12 +17,14 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    // email and phone must be unique
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, unique = true)
     private String phone;
 
+    // user can be active/inactive based on the membership expiration date
     @Column(name = "membership_expiration") 
     private LocalDate membershipExpirationDate;
     

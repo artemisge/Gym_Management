@@ -24,10 +24,6 @@ public class Package {
 
     private Boolean available; // Indicates if the package is available for purchase
 
-    // @OneToMany(mappedBy = "packageType", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<Payment> payments = new ArrayList<>();
-
-
     public Package() {
         // empty for hibernate
     }
